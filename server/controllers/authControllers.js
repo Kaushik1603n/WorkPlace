@@ -28,7 +28,9 @@ export const register = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.json({ success: false, message: "User Already Exists" });
+      return res
+        .status(409)
+        .json({ success: false, message: "User Already Exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -63,67 +65,49 @@ export const verifyOtp = async (req, res) => {
   const { userId, otp } = req.body;
 
   try {
-    // Validate input
-    console.log(req.body);
-    
     if (!userId || !otp) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "User ID and OTP are required" 
+      return res.status(400).json({
+        success: false,
+        message: "User ID and OTP are required",
       });
     }
 
-    // Find user with OTP fields
-    const user = await User.findOne({_id:userId})
-      console.log(user);
-
-      
+    const user = await User.findOne({ _id: userId });
 
     if (!user) {
-      console.log("dnn");
-      
-      return res.status(404).json({ 
-        success: false, 
-        message: "User not found" 
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
       });
     }
 
-    // Verify OTP
     if (Number(user.otp) !== Number(otp)) {
-      console.log("invalid");
-      
-      return res.status(401).json({ 
-        success: false, 
-        message: "Invalid OTP" 
+      return res.status(401).json({
+        success: false,
+        message: "Invalid OTP",
       });
     }
 
-    // Check OTP expiry
     if (new Date() > new Date(user.otpExpiry)) {
-       console.log("invalid time");
-      return res.status(401).json({ 
-        success: false, 
-        message: "OTP has expired" 
+      return res.status(401).json({
+        success: false,
+        message: "OTP has expired",
       });
     }
 
-    // Update user
     user.isVerified = true;
     user.otp = undefined;
     user.otpExpiry = undefined;
     await user.save();
 
-    // Generate tokens
     const { accessToken, refreshToken } = generateTokens(
       user._id,
       user.email,
       user.role
     );
 
-    // Store refresh token
     await storeRefreshToken(user._id, refreshToken);
 
-    // Set cookies
     const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -132,18 +116,15 @@ export const verifyOtp = async (req, res) => {
 
     res.cookie("accessToken", accessToken, {
       ...cookieOptions,
-      maxAge: 15 * 60 * 1000, // 15 minutes
+      maxAge: 15 * 60 * 1000,
     });
 
     res.cookie("refreshToken", refreshToken, {
       ...cookieOptions,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: 7 * 24 * 60 * 60 * 1000,
       path: "/api/auth/refresh",
     });
 
-    console.log("success");
-    
-    // Return success response
     return res.status(200).json({
       success: true,
       user: {
@@ -155,12 +136,11 @@ export const verifyOtp = async (req, res) => {
       },
       accessToken, // Optional: include in response if needed by client
     });
-
   } catch (err) {
     console.error("OTP verification error:", err);
-    return res.status(500).json({ 
-      success: false, 
-      message: "Internal server error" 
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
     });
   }
 };
@@ -172,19 +152,18 @@ export const resendOtp = async (req, res) => {
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.json({ success: false, message: "User not found" });
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found" });
     }
 
-    // Generate new OTP
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     const otpExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
 
-    // Update user with new OTP
     user.otp = otp;
     user.otpExpiry = otpExpiry;
     await user.save();
 
-    // Send new OTP
     await sendOtpEmail(user.email, user.fullName, otp);
 
     return res.status(200).json({
@@ -199,16 +178,20 @@ export const resendOtp = async (req, res) => {
 // Forgot password
 export const forgotPass = async (req, res) => {
   const { email } = req.body;
-console.log(email);
+  console.log(email);
 
   if (!email) {
-    return res.json({ success: false, message: "Missing details" });
+    return res.status(400).json({
+      success: false,
+      message: "Email is required",
+    });
   }
-
   try {
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
-      return res.json({ success: false, message: "User not found" }); // Fixed message from "User Already Exists"
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" }); // Fixed message from "User Already Exists"
     }
 
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
@@ -249,17 +232,21 @@ export const resetPassVerifyOtp = async (req, res) => {
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     if (Number(user.otp) !== Number(otp) || new Date() > user.otpExpiry) {
-      return res.json({ success: false, message: "Invalid or expired OTP" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid or expired OTP" });
     }
 
     res.status(200).json({
       success: true,
       message: "OTP verified successfully",
-      userId:user._id
+      userId: user._id,
     });
   } catch (error) {
     console.error("Error in OTP verification:", error);
@@ -272,7 +259,7 @@ export const resetPassVerifyOtp = async (req, res) => {
 
 export const changePassword = async (req, res) => {
   const { userId, newPassword, confirmPassword } = req.body;
-console.log( userId, newPassword, confirmPassword);
+  console.log(userId, newPassword, confirmPassword);
 
   try {
     if (!userId || !newPassword || !confirmPassword) {
@@ -444,9 +431,6 @@ export const refresh = async (req, res) => {
 
 export const getMe = async (req, res) => {
   try {
-    // The user ID
-    // should be attached to the request by your auth middleware
-
     const user = await User.findById(req.user.userId)
       .select("-password")
       .select("-refreshToken");
@@ -480,7 +464,7 @@ export const logout = async (req, res) => {
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken", { path: "/api/auth/refresh" });
 
-    return res.json({ success: true, message: "Logged out successfully" });
+    return res.status(200).json({ success: true, message: "Logged out successfully" });
   } catch (error) {
     console.error("Logout error:", error);
     return res

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { verifyEmail } from '../../features/auth/authSlice';
+import { toast } from "react-toastify";
 
 export default function OTPVerification() {
   const [otp, setOtp] = useState(['', '', '', '']);
@@ -91,8 +92,7 @@ export default function OTPVerification() {
             navigate("/change-pass"); // or your desired route
           })
           .catch((error) => {
-            // Error is already handled in the slice
-            console.error("OTP validation failed:", error);
+           toast.error(error.message)
           });
    
   };

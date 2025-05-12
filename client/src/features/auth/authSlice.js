@@ -1,5 +1,6 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { authApi } from './authApi';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { authApi } from "./authApi";
+import axios from "axios";
 
 // Async thunks
 // export const loginUser = createAsyncThunk(
@@ -10,7 +11,7 @@ import { authApi } from './authApi';
 //       localStorage.setItem('access_token', response.data.access_token || response.data.cookie);
 //       console.log(response.data.access_token);
 //       console.log(response.data.cookie);
-      
+
 //       return response.data;
 //     } catch (error) {
 //       return rejectWithValue(error.response.data);
@@ -18,12 +19,11 @@ import { authApi } from './authApi';
 //   }
 // );
 export const loginUser = createAsyncThunk(
-  'auth/login',
+  "auth/login",
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await authApi.login(credentials);
-      // Use response.data.accessToken instead of access_token or cookie
-      localStorage.setItem('access_token', response.data.accessToken);
+      localStorage.setItem("access_token", response.data.accessToken);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -31,7 +31,7 @@ export const loginUser = createAsyncThunk(
   }
 );
 export const registerUser = createAsyncThunk(
-  'auth/register',
+  "auth/register",
   async (userData, { rejectWithValue }) => {
     try {
       const response = await authApi.register(userData);
@@ -43,25 +43,23 @@ export const registerUser = createAsyncThunk(
 );
 
 export const verifyEmail = createAsyncThunk(
-  'auth/verify-otp',
+  "auth/verify-otp",
   async (otp, { rejectWithValue }) => {
     try {
       const response = await authApi.verifyEmail(otp);
-      localStorage.setItem('access_token', response.data.accessToken)
+      localStorage.setItem("access_token", response.data.accessToken);
       return response.data;
-
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
 );
 export const forgotPass = createAsyncThunk(
-  'auth/forgot-password',
+  "auth/forgot-password",
   async (email, { rejectWithValue }) => {
     try {
       const response = await authApi.forgotPassword(email);
       return response.data;
-
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -69,7 +67,7 @@ export const forgotPass = createAsyncThunk(
 );
 
 export const resetOtp = createAsyncThunk(
-  'auth/verify-reset-otp',
+  "auth/verify-reset-otp",
   async (otp, { rejectWithValue }) => {
     try {
       const response = await authApi.resetOtp(otp);
@@ -80,7 +78,7 @@ export const resetOtp = createAsyncThunk(
   }
 );
 export const resetPassword = createAsyncThunk(
-  'auth/reset-pass',
+  "auth/reset-pass",
   async (pass, { rejectWithValue }) => {
     try {
       const response = await authApi.resetPassword(pass);
@@ -92,10 +90,10 @@ export const resetPassword = createAsyncThunk(
 );
 
 export const fetchUser = createAsyncThunk(
-  'auth/fetchUser',
+  "auth/fetchUser",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await authApi.getMe();      
+      const response = await authApi.getMe();
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -103,9 +101,21 @@ export const fetchUser = createAsyncThunk(
   }
 );
 
-export const logoutUser = createAsyncThunk('auth/logout', async () => {
+export const googleAuth = createAsyncThunk(
+  'auth/google',
+  async (accessToken, { rejectWithValue }) => {
+    try {
+      const response = await axios.post('/api/auth/google', { accessToken });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk("auth/logout", async () => {
   await authApi.logout();
-  localStorage.removeItem('access_token');
+  localStorage.removeItem("access_token");
 });
 
 const initialState = {
@@ -116,7 +126,7 @@ const initialState = {
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     clearError: (state) => {
@@ -133,26 +143,28 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = true;
         state.user = action.payload.user;
+        state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        const errorMsg = action.payload?.message || "Login failed";
+        state.error = { message: errorMsg };
       })
-      
+
       // Register
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(registerUser.fulfilled, (state,action) => {
+      .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.userId
+        state.user = action.payload.userId;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      
+
       // Verify Email
       .addCase(verifyEmail.pending, (state) => {
         state.loading = true;
@@ -210,7 +222,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      
+
       // Fetch User
       .addCase(fetchUser.pending, (state) => {
         state.loading = true;
@@ -219,14 +231,29 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = true;
         state.user = action.payload.data;
-        
       })
       .addCase(fetchUser.rejected, (state) => {
         state.loading = false;
         state.isAuthenticated = false;
         state.user = null;
       })
-      
+
+      // google route
+      .addCase(googleAuth.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(googleAuth.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        localStorage.setItem('accessToken', action.payload.accessToken);
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
+      })
+      .addCase(googleAuth.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || 'Google authentication failed';
+      })
+
       // Logout
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;

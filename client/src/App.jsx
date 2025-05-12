@@ -16,6 +16,8 @@ import OTPVerification from "./pages/auth/OTPVerification";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetOtp from "./pages/auth/ResetOtp";
 import ChangePass from "./pages/auth/ChangePass";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // function App() {
 //   const dispatch = useDispatch();
@@ -69,6 +71,7 @@ function App() {
   1234;
   return (
     <Router>
+       <ToastContainer />
       <Routes>
         {!isAuthenticated && (
           <>

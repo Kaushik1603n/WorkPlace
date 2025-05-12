@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { resetOtp } from '../../features/auth/authSlice';
+import { toast } from "react-toastify";
 
 export default function ResetOtp() {
   const [otp, setOtp] = useState(['', '', '', '']);
@@ -50,7 +51,6 @@ export default function ResetOtp() {
       newOtp[index] = value;
       setOtp(newOtp);
       
-      // Auto-focus next input
       if (value && index < 3) {
         inputRefs[index + 1].current.focus();
       }
@@ -93,7 +93,7 @@ export default function ResetOtp() {
           })
           .catch((error) => {
             // Error is already handled in the slice
-            console.error("Login failed:", error);
+            toast.error( error.message);
           });
    
   };

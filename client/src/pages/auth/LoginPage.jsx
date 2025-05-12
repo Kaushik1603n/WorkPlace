@@ -1,8 +1,9 @@
-import { useState } from "react";
+import {  useState } from "react";
 import { Mail, Lock } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../features/auth/authSlice";
+import {  loginUser } from "../../features/auth/authSlice";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const [activeTab, setActiveTab] = useState("login");
@@ -11,19 +12,40 @@ export default function LoginPage() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((state) => state.auth);
+  const { loading } = useSelector((state) => state.auth);
+
+  const googleAuth =()=>{
+   
+  }
 
   const handleLogin = (e) => {
     e.preventDefault();
+
+    if (!email || !password) {
+      toast.error("Email and password are required.");
+      return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters.");
+      return;
+    }
     dispatch(loginUser({ email, password }))
       .unwrap()
-      .then(() => {
-        // Redirect on successful login
-        navigate("/home"); // or your desired route
+      .then((user) => {
+        console.log(user);
+        toast.success("Login successful");
+        navigate("/home");
       })
       .catch((error) => {
-        // Error is already handled in the slice
-        console.error("Login failed:", error);
+        console.log(error?.message);
+        toast.error(error?.message);
       });
   };
 
@@ -65,13 +87,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Error Message */}
-          {error && (
-            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
-              {error.message || "Login failed. Please try again."}
-            </div>
-          )}
-
           {/* Form */}
           <form onSubmit={handleLogin}>
             <div className="mb-6">
@@ -89,7 +104,6 @@ export default function LoginPage() {
                   placeholder="Please Enter your Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required
                 />
               </div>
             </div>
@@ -109,7 +123,6 @@ export default function LoginPage() {
                   placeholder="Please Enter your Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required
                 />
               </div>
             </div>
@@ -132,6 +145,7 @@ export default function LoginPage() {
             </button>
 
             <button
+            onClick={googleAuth}
               type="button"
               className="w-full flex items-center justify-center bg-green-500 hover:bg-green-600 text-white py-3 rounded-md font-medium transition duration-200"
             >

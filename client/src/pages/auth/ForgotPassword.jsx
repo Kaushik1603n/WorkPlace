@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { forgotPass } from "../../features/auth/authSlice";
+import { toast } from "react-toastify";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -13,16 +14,20 @@ export default function ForgotPassword() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
     dispatch(forgotPass({ email }))
       .unwrap()
       .then(() => {
         console.log("sjbsbj");
-        
+
         navigate("/otp");
       })
       .catch((error) => {
-        // Error is already handled in the slice
-        console.error("Email verification failed", error);
+       toast.error(error.message);
       });
   };
 
@@ -46,7 +51,6 @@ export default function ForgotPassword() {
                 placeholder="Please Enter your Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
               />
             </div>
 

@@ -7,6 +7,9 @@ import { fileURLToPath } from "url";
 import path from "path";
 import rateLimit from "express-rate-limit";
 import connectDB from "./config/db.js";
+import passport from 'passport';
+import './config/passport.js';
+
 
 // Configuration
 const __filename = fileURLToPath(import.meta.url);
@@ -31,6 +34,10 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+// google
+app.use(passport.initialize());
+
+
 // Database connection
 connectDB();
 
@@ -38,7 +45,7 @@ connectDB();
 app.use("/api/auth", (await import("./routes/auth.js")).default)
 // app.use("/api/client", (await import("./routes/client.js")).default);
 // app.use("/api/freelancer", (await import("./routes/freelancer.js")).default);
-
+// http://localhost:5173//api/auth/google/callback
 
 // Server start
 const PORT = process.env.PORT || 3001;
