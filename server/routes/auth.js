@@ -10,6 +10,7 @@ import {
   forgotPass,
   resetPassVerifyOtp,
   changePassword,
+  getMe,
 } from "../controllers/authControllers.js";
 import authenticate from "../middleware/authMiddleware.js";
 
@@ -20,11 +21,12 @@ router.post("/resend-otp", resendOtp);
 router.post("/login", login);
 router.post("/refresh", refresh);
 
-router.post("/forgot-pass", forgotPass);
+router.post("/forgot-password", forgotPass);
 router.post("/verify-reset-otp", resetPassVerifyOtp);
-router.post("/reset-pass", changePassword);
+router.post("/reset-password", changePassword);
 
 // Protected routes
 router.post("/logout", authenticate, logout);
+router.get('/me', authenticate, getMe);
 
 export default router;

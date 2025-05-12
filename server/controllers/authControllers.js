@@ -22,7 +22,7 @@ export const register = async (req, res) => {
   const { joinAs, fullName, email, password } = req.body;
 
   if (!joinAs || !fullName || !email || !password) {
-    return res.json({ success: false, message: "Missing details" });
+    return res.status(400).json({ success: false, message: "Missing details" });
   }
 
   try {
@@ -33,7 +33,7 @@ export const register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
     const otpExpiry = new Date(Date.now() + 15 * 60 * 1000);
 
     const user = await User.create({
@@ -63,43 +63,87 @@ export const verifyOtp = async (req, res) => {
   const { userId, otp } = req.body;
 
   try {
-    const user = await User.findById(userId);
+    // Validate input
+    console.log(req.body);
+    
+    if (!userId || !otp) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "User ID and OTP are required" 
+      });
+    }
+
+    // Find user with OTP fields
+    const user = await User.findOne({_id:userId})
+      console.log(user);
+
+      
 
     if (!user) {
-      return res.json({ success: false, message: "User not found" });
+      console.log("dnn");
+      
+      return res.status(404).json({ 
+        success: false, 
+        message: "User not found" 
+      });
     }
 
-    if (Number(user.otp) !== Number(otp) || new Date() > user.otpExpiry) {
-      return res.json({ success: false, message: "Invalid or expired OTP" });
+    // Verify OTP
+    if (Number(user.otp) !== Number(otp)) {
+      console.log("invalid");
+      
+      return res.status(401).json({ 
+        success: false, 
+        message: "Invalid OTP" 
+      });
     }
 
+    // Check OTP expiry
+    if (new Date() > new Date(user.otpExpiry)) {
+       console.log("invalid time");
+      return res.status(401).json({ 
+        success: false, 
+        message: "OTP has expired" 
+      });
+    }
+
+    // Update user
     user.isVerified = true;
     user.otp = undefined;
     user.otpExpiry = undefined;
     await user.save();
 
+    // Generate tokens
     const { accessToken, refreshToken } = generateTokens(
       user._id,
       user.email,
       user.role
     );
+
+    // Store refresh token
     await storeRefreshToken(user._id, refreshToken);
 
-    res.cookie("accessToken", accessToken, {
+    // Set cookies
+    const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 15 * 60 * 1000, // 15 minutes
       sameSite: "strict",
+    };
+
+    res.cookie("accessToken", accessToken, {
+      ...cookieOptions,
+      maxAge: 15 * 60 * 1000, // 15 minutes
     });
 
     res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      ...cookieOptions,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      sameSite: "strict",
       path: "/api/auth/refresh",
     });
 
+    console.log("success");
+    
+    // Return success response
     return res.status(200).json({
       success: true,
       user: {
@@ -107,10 +151,17 @@ export const verifyOtp = async (req, res) => {
         fullName: user.fullName,
         email: user.email,
         role: user.role,
+        isVerified: user.isVerified,
       },
+      accessToken, // Optional: include in response if needed by client
     });
+
   } catch (err) {
-    res.status(500).json({ success: false, message: "Internal server error" });
+    console.error("OTP verification error:", err);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Internal server error" 
+    });
   }
 };
 
@@ -125,7 +176,7 @@ export const resendOtp = async (req, res) => {
     }
 
     // Generate new OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
     const otpExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
 
     // Update user with new OTP
@@ -145,10 +196,10 @@ export const resendOtp = async (req, res) => {
   }
 };
 
-
-// Forgot password 
+// Forgot password
 export const forgotPass = async (req, res) => {
   const { email } = req.body;
+console.log(email);
 
   if (!email) {
     return res.json({ success: false, message: "Missing details" });
@@ -160,7 +211,7 @@ export const forgotPass = async (req, res) => {
       return res.json({ success: false, message: "User not found" }); // Fixed message from "User Already Exists"
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
     const otpExpiry = new Date(Date.now() + 15 * 60 * 1000);
 
     existingUser.otp = otp;
@@ -208,6 +259,7 @@ export const resetPassVerifyOtp = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "OTP verified successfully",
+      userId:user._id
     });
   } catch (error) {
     console.error("Error in OTP verification:", error);
@@ -219,7 +271,8 @@ export const resetPassVerifyOtp = async (req, res) => {
 };
 
 export const changePassword = async (req, res) => {
-  const { userId,  newPassword, confirmPassword } = req.body;
+  const { userId, newPassword, confirmPassword } = req.body;
+console.log( userId, newPassword, confirmPassword);
 
   try {
     if (!userId || !newPassword || !confirmPassword) {
@@ -244,7 +297,7 @@ export const changePassword = async (req, res) => {
       });
     }
 
-       const isSamePassword = await bcrypt.compare(newPassword, user.password);
+    const isSamePassword = await bcrypt.compare(newPassword, user.password);
     if (isSamePassword) {
       return res.status(400).json({
         success: false,
@@ -328,6 +381,7 @@ export const login = async (req, res) => {
         email: user.email,
         role: user.role,
       },
+      accessToken,
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -385,6 +439,36 @@ export const refresh = async (req, res) => {
     return res
       .status(403)
       .json({ success: false, message: "Invalid refresh token" });
+  }
+};
+
+export const getMe = async (req, res) => {
+  try {
+    // The user ID
+    // should be attached to the request by your auth middleware
+
+    const user = await User.findById(req.user.userId)
+      .select("-password")
+      .select("-refreshToken");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    console.log(user);
+
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
   }
 };
 
