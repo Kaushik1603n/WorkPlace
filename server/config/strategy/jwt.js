@@ -13,7 +13,7 @@ const jwtStrategy = (passport) => {
         try {
           console.log(payload.userId);
           
-          const user = await User.findById(payload.userId);
+          const user = await User.findById(payload.userId);          
           if (user) {
             done(null, user);
           } else {

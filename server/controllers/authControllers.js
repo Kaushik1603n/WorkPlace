@@ -431,7 +431,6 @@ export const getMe = async (req, res) => {
         message: "User not found",
       });
     }
-    console.log(user);
 
     res.status(200).json({
       success: true,
@@ -468,10 +467,7 @@ export const logout = async (req, res) => {
 export const googleCallback = async (req, res) => {
   try {
     const user = req.user;
-    const { accessToken, refreshToken } = generateTokens(
-      user._id,
-      user.email,
-    );
+    const { accessToken, refreshToken } = generateTokens(user._id, user.email);
 
     await User.findByIdAndUpdate(user._id, { refreshToken });
 
@@ -505,9 +501,29 @@ export const googleCallback = async (req, res) => {
 export const getUser = async (req, res) => {
   try {
     if (!req.user) {
-      res.status(401).json({ message: "user not authenticated" });
+     return res.status(401).json({ message: "user not authenticated" });
     }
     res.json({ user: req.user });
+  } catch (error) {
+    console.error("error during get user", error);
+    res.status(500).json({ message: "internal server error during  get user" });
+  }
+};
+export const userRole = async (req, res) => {
+  try {
+    const { role } = req.body;
+
+    if (!req.user) {
+      res.status(401).json({ message: "user not authenticated" });
+    }
+
+    const userId = req.user.userId;
+    const userData = await User.findByIdAndUpdate(
+      userId,
+      { role: role },
+      { new: true }
+    );
+    res.status(200).json({ message: "User role updated", user: userData });
   } catch (error) {
     console.error("error during get user", error);
     res.status(500).json({ message: "internal server error during  get user" });

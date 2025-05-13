@@ -14,6 +14,7 @@ import {
   getMe,
   googleCallback,
   getUser,
+  userRole,
 } from "../controllers/authControllers.js";
 import authenticate from "../middleware/authMiddleware.js";
 import { generateTokens } from "../utils/jwt.js";
@@ -50,5 +51,6 @@ router.get(
 );
 
 router.get("/user", passport.authenticate("jwt", { session: false }), getUser);
+router.post("/set-role",authenticate, userRole);
 
 export default router;

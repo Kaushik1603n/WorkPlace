@@ -8,7 +8,6 @@ const UserSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: ["freelancer", "client", "admin"],
-      default: "client",
     },
     isVerified: { type: Boolean, default: false },
     otp: { type: Number },
