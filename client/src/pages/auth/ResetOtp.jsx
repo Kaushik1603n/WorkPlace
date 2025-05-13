@@ -1,11 +1,12 @@
-import { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { resetOtp } from '../../features/auth/authSlice';
+import { useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { resetOtp } from "../../features/auth/authSlice";
 import { toast } from "react-toastify";
+import p2 from "../../assets/pp1.svg";
 
 export default function ResetOtp() {
-  const [otp, setOtp] = useState(['', '', '', '']);
+  const [otp, setOtp] = useState(["", "", "", ""]);
   const [timer, setTimer] = useState(60); // Timer in seconds
   const [isTimerRunning, setIsTimerRunning] = useState(true);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
@@ -16,8 +17,7 @@ export default function ResetOtp() {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   console.log(user);
-  
-// userId
+
 
   useEffect(() => {
     let interval;
@@ -27,22 +27,21 @@ export default function ResetOtp() {
       }, 1000);
     } else if (timer === 0) {
       setIsTimerRunning(false);
-      setIsResendDisabled(false); // Enable resend button when timer expires
-      setIsRegisterDisabled(true); // Disable register button when timer expires
+      setIsResendDisabled(false); 
+      setIsRegisterDisabled(true); 
     }
     return () => clearInterval(interval);
   }, [timer, isTimerRunning]);
 
   useEffect(() => {
-    // Enable register button only when all OTP fields are filled
-    const allFieldsFilled = otp.every(digit => digit !== '');
+    const allFieldsFilled = otp.every((digit) => digit !== "");
     setIsRegisterDisabled(!allFieldsFilled);
   }, [otp]);
 
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
-    return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+    return `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
   };
 
   const handleChange = (index, value) => {
@@ -50,7 +49,7 @@ export default function ResetOtp() {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
-      
+
       if (value && index < 3) {
         inputRefs[index + 1].current.focus();
       }
@@ -58,71 +57,58 @@ export default function ResetOtp() {
   };
 
   const handleKeyDown = (index, e) => {
-    // Handle backspace
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs[index - 1].current.focus();
     }
   };
 
   const handleResendOTP = () => {
     if (isResendDisabled) return;
-    
-    // Reset OTP fields and timer
-    setOtp(['', '', '', '']);
+
+    setOtp(["", "", "", ""]);
     setTimer(60);
     setIsTimerRunning(true);
-    setIsResendDisabled(true); // Disable resend button again
-    setIsRegisterDisabled(false); // Enable register button
+    setIsResendDisabled(true);
+    setIsRegisterDisabled(false); 
     inputRefs[0].current.focus();
-    
-    // Here you would typically call your API to resend OTP
-    console.log('Resending OTP...');
+
+    console.log("Resending OTP...");
   };
 
   const handleRegister = () => {
     if (isRegisterDisabled) return;
-    
-    // Combine OTP digits
-    const otpCode = otp.join('');
-    
-     dispatch(resetOtp({otp:otpCode, userId:user}))
-          .unwrap()
-          .then(() => {
-            // Redirect on successful login
-            navigate("/change-pass"); // or your desired route
-          })
-          .catch((error) => {
-            // Error is already handled in the slice
-            toast.error( error.message);
-          });
-   
+
+    const otpCode = otp.join("");
+
+    dispatch(resetOtp({ otp: otpCode, userId: user }))
+      .unwrap()
+      .then(() => {
+        navigate("/change-pass"); 
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-green-50">
       <h1 className="text-3xl font-bold mt-16 mb-8">WorkPlace</h1>
-      
-      <div className="w-full max-w-5xl flex flex-col md:flex-row">
-        {/* Left side - Illustration */}
-        <div className="w-full md:w-1/2 p-4 flex justify-center">
-          <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
-            <img 
-              src="/api/placeholder/500/500" 
-              alt="People discussing with speech bubbles"
-              className="w-full object-contain"
-            />
+
+      <div className="w-full max-w-5xl flex flex-col md:flex-row rounded-lg shadow-lg">
+        <div className="hidden lg:block lg:w-1/2 bg-green-100 p-12 relative">
+          <div className="flex flex-col items-center justify-center h-full">
+            <img src={p2} alt="Workplace Image" className="max-w-full h-auto" />
           </div>
         </div>
-        
-        {/* Right side - OTP form */}
+
         <div className="w-full md:w-1/2 p-4 flex flex-col justify-center items-center">
           <div className="text-center mb-6">
             <p className="text-gray-700">OTP has been send to your Email</p>
-            
+
             <div className="text-5xl text-green-500 font-bold my-6">
               {formatTime(timer)}
             </div>
-            
+
             <div className="flex justify-center gap-3 mb-8">
               {otp.map((digit, index) => (
                 <input
@@ -137,26 +123,28 @@ export default function ResetOtp() {
                 />
               ))}
             </div>
-            
-            <button 
+
+            <button
               onClick={handleResendOTP}
               disabled={isResendDisabled}
               className={`w-full py-3 rounded-lg transition mb-4 ${
-                isResendDisabled 
-                  ? 'bg-gray-400 cursor-not-allowed' 
-                  : 'bg-green-500 text-white hover:bg-green-600'
+                isResendDisabled
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-green-500 text-white hover:bg-green-600"
               }`}
             >
-              {isResendDisabled ? `Resend available in ${timer}s` : 'Send Again'}
+              {isResendDisabled
+                ? `Resend available in ${timer}s`
+                : "Send Again"}
             </button>
-            
-            <button 
+
+            <button
               onClick={handleRegister}
               disabled={isRegisterDisabled}
               className={`w-full py-3 rounded-lg transition ${
-                isRegisterDisabled 
-                  ? 'bg-gray-400 cursor-not-allowed' 
-                  : 'bg-green-500 text-white hover:bg-green-600'
+                isRegisterDisabled
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-green-500 text-white hover:bg-green-600"
               }`}
             >
               Register

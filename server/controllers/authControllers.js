@@ -8,7 +8,6 @@ import {
 } from "../utils/nodemailer.js";
 import crypto from "crypto";
 
-// Store refresh tokens in database
 const storeRefreshToken = async (userId, token) => {
   await User.findByIdAndUpdate(userId, { refreshToken: token });
 };
@@ -57,6 +56,7 @@ export const register = async (req, res) => {
       userId: user._id,
     });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
@@ -355,9 +355,9 @@ export const login = async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: "strict",
-      path: "/api/auth/refresh", // Only sent on refresh requests
+      path: "/api/auth/refresh", 
     });
 
     return res.status(201).json({
@@ -378,7 +378,6 @@ export const login = async (req, res) => {
   }
 };
 
-// Refresh Token Endpoint
 export const refresh = async (req, res) => {
   try {
     const refreshToken = req.cookies?.refreshToken;
@@ -464,11 +463,63 @@ export const logout = async (req, res) => {
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken", { path: "/api/auth/refresh" });
 
-    return res.status(200).json({ success: true, message: "Logged out successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Logged out successfully" });
   } catch (error) {
     console.error("Logout error:", error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const googleCallback = async (req, res) => {
+  try {
+    const user = req.user;
+    const { accessToken, refreshToken } = generateTokens(
+      user._id,
+      user.email,
+      "client"
+    );
+
+    await User.findByIdAndUpdate(user._id, { refreshToken });
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 15 * 60 * 1000,
+      sameSite: "Strict",
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "Strict",
+      path: "/api/auth/refresh",
+    });
+    console.log(user);
+
+    res.redirect(
+      `${process.env.CLIENT_URL}/success-login?accessToken=${accessToken}`
+    );
+  } catch (error) {
+    console.error("error during google callback", error);
+    res
+      .status(500)
+      .json({ message: "internal server error during google login" });
+  }
+};
+
+export const getUser = async (req, res) => {
+  try {
+    if (!req.user) {
+      res.status(401).json({ message: "user not authenticated" });
+    }
+    res.json({ user: req.user });
+  } catch (error) {
+    console.error("error during get user", error);
+    res.status(500).json({ message: "internal server error during  get user" });
   }
 };

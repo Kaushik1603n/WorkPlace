@@ -1,22 +1,34 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { Mail, Lock } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import {  loginUser } from "../../features/auth/authSlice";
+import { loginUser } from "../../features/auth/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import p2 from "../../assets/pp1.svg";
 
 export default function LoginPage() {
+  // const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const [activeTab, setActiveTab] = useState("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // const [load, setLoad] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading } = useSelector((state) => state.auth);
 
-  const googleAuth =()=>{
-   
-  }
+  const handleGoogleLogin = () => {
+    // try {
+    //   setLoad(true);
+    //   const googleLoginUrl = `${apiUrl}/auth/google`;
+    //   window.location.href = googleLoginUrl;
+    // } catch (error) {
+    //   console.log("error login with google", error);
+    // } finally {
+    //   setLoad(false);
+    // }
+  };
+
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -87,7 +99,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleLogin}>
             <div className="mb-6">
               <label htmlFor="email" className="block text-gray-700 mb-2">
@@ -145,7 +156,8 @@ export default function LoginPage() {
             </button>
 
             <button
-            onClick={googleAuth}
+              onClick={handleGoogleLogin}
+              disabled={true}
               type="button"
               className="w-full flex items-center justify-center bg-green-500 hover:bg-green-600 text-white py-3 rounded-md font-medium transition duration-200"
             >
@@ -161,60 +173,16 @@ export default function LoginPage() {
           </form>
         </div>
 
-        {/* Right Panel - Illustration */}
-        <div className="hidden lg:block lg:w-1/2 bg-gray-800 p-12 relative">
-          <h1 className="text-3xl font-bold text-white text-center mb-8">
+        <div className="hidden lg:block lg:w-1/2 bg-green-100 p-12 relative">
+          <h1 className="text-3xl font-bold  text-center mb-8">
             WorkPlace
           </h1>
-
           <div className="flex flex-col items-center justify-center h-full">
-            {/* Speech Bubbles */}
-            <div className="absolute top-24 right-24">
-              <div className="bg-green-100 w-24 h-24 rounded-full"></div>
-            </div>
-            <div className="absolute top-32 left-16">
-              <div className="bg-red-200 w-16 h-16 rounded-full"></div>
-            </div>
-            <div className="absolute top-40 right-32">
-              <div className="bg-orange-300 w-32 h-16 rounded-lg"></div>
-            </div>
-            <div className="absolute top-16 left-24">
-              <div className="bg-blue-100 w-20 h-20 rounded-full"></div>
-            </div>
-            <div className="absolute top-48 left-32">
-              <div className="bg-green-200 w-16 h-16 rounded-full"></div>
-            </div>
-
-            {/* People Illustration */}
-            <div className="mt-48">
-              <div className="flex justify-center space-x-2">
-                <div className="relative w-16 h-48">
-                  <div className="absolute bottom-0 w-16 h-32 bg-gray-300 rounded-t-full"></div>
-                  <div className="absolute bottom-24 left-3 w-10 h-10 bg-gray-200 rounded-full"></div>
-                  <div className="absolute bottom-12 w-16 h-12 bg-green-700"></div>
-                </div>
-                <div className="relative w-16 h-48">
-                  <div className="absolute bottom-0 w-16 h-28 bg-orange-300 rounded-t-full"></div>
-                  <div className="absolute bottom-20 left-3 w-10 h-10 bg-red-300 rounded-full"></div>
-                  <div className="absolute bottom-8 w-16 h-12 bg-green-700"></div>
-                </div>
-                <div className="relative w-16 h-48">
-                  <div className="absolute bottom-0 w-16 h-30 bg-blue-200 rounded-t-full"></div>
-                  <div className="absolute bottom-22 left-3 w-10 h-10 bg-gray-100 rounded-full"></div>
-                  <div className="absolute bottom-10 w-16 h-12 bg-gray-800"></div>
-                </div>
-                <div className="relative w-16 h-48">
-                  <div className="absolute bottom-0 w-16 h-28 bg-green-200 rounded-t-full"></div>
-                  <div className="absolute bottom-20 left-3 w-10 h-10 bg-green-600 rounded-full"></div>
-                  <div className="absolute bottom-10 w-16 h-10 bg-red-700"></div>
-                </div>
-                <div className="relative w-16 h-48">
-                  <div className="absolute bottom-0 w-16 h-32 bg-red-400 rounded-t-full"></div>
-                  <div className="absolute bottom-24 left-3 w-10 h-10 bg-red-300 rounded-full"></div>
-                  <div className="absolute bottom-12 w-16 h-12 bg-green-700"></div>
-                </div>
-              </div>
-            </div>
+            <img
+              src={p2}
+              alt="Workplace Image"
+              className="max-w-full h-auto"
+            />
           </div>
         </div>
       </div>

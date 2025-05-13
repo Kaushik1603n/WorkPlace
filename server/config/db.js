@@ -13,9 +13,9 @@ const connectDB = async () => {
   });
   try {
     await mongoose.connect(`${process.env.MONGO_URI}/WorkPlace`, {
-      maxPoolSize: 10, // Connection pool size
-      serverSelectionTimeoutMS: 5000, // Timeout after 5s
-      socketTimeoutMS: 45000, // Close idle connections after 45s
+      maxPoolSize: 10, 
+      serverSelectionTimeoutMS: 5000, 
+      socketTimeoutMS: 45000, 
     });
 
     console.log("MongoDB Connected");

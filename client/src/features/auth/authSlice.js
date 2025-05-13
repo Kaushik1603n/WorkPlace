@@ -3,21 +3,7 @@ import { authApi } from "./authApi";
 import axios from "axios";
 
 // Async thunks
-// export const loginUser = createAsyncThunk(
-//   'auth/login',
-//   async (credentials, { rejectWithValue }) => {
-//     try {
-//       const response = await authApi.login(credentials);
-//       localStorage.setItem('access_token', response.data.access_token || response.data.cookie);
-//       console.log(response.data.access_token);
-//       console.log(response.data.cookie);
 
-//       return response.data;
-//     } catch (error) {
-//       return rejectWithValue(error.response.data);
-//     }
-//   }
-// );
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (credentials, { rejectWithValue }) => {

@@ -18,35 +18,8 @@ import ResetOtp from "./pages/auth/ResetOtp";
 import ChangePass from "./pages/auth/ChangePass";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import LoginSuccess from "./components/auth/LoginSuccess";
 
-// function App() {
-//   const dispatch = useDispatch();
-
-//   useEffect(() => {
-//     const token = localStorage.getItem("access_token");
-//     console.log("Token exists:", !!token);
-//     if (token) {
-//       console.log("Dispatching fetchUser");
-//       dispatch(fetchUser())
-//         .unwrap()
-//         .then(() => console.log("Fetch user succeeded"))
-//         .catch((err) => console.log("Fetch user failed:", err));
-//     }
-//   }, [dispatch]);
-//   return (
-//     <Router>
-//       <Routes>
-//         <Route path="/login" element={<LoginPage />} />
-
-//         {/* Protected routes */}
-//         <Route element={<ProtectedRoute />}>
-//           <Route path="/home" element={<HomePage />} />
-//           <Route path="/" element={<SignupPage />} />
-//         </Route>
-//       </Routes>
-//     </Router>
-//   );
-// }
 
 function App() {
   const dispatch = useDispatch();
@@ -68,7 +41,7 @@ function App() {
   if (!authChecked) {
     // return <div>Loading application...</div>;
   }
-  1234;
+  
   return (
     <Router>
        <ToastContainer />
@@ -94,6 +67,7 @@ function App() {
           <Route path="/home" element={<HomePage />} />
         </Route>
         <Route path="/" element={<HomePage />} />
+        <Route path="/success-login" element={<LoginSuccess />} />
       </Routes>
     </Router>
   );

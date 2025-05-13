@@ -1,9 +1,7 @@
 import { verifyAccessToken } from "../utils/jwt.js";
-// import User from '../models/User.js';
 
 const authenticate = async (req, res, next) => {
 
-  // Get token from cookies or header
   const accessToken =
     req.cookies?.accessToken ||
     req.header("Authorization")?.replace("Bearer ", "");
@@ -19,7 +17,6 @@ const authenticate = async (req, res, next) => {
 
     next();
   } catch (error) {
-    // Access token expired - try refreshing
     if (error.name === "TokenExpiredError") {
       return res.status(401).json({
         success: false,

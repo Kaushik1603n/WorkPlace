@@ -4,13 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../../features/auth/authSlice";
 import { toast } from "react-toastify";
+import p2 from "../../assets/pp1.svg";
 
 export default function CombinedRegistration() {
-  // Step 1
+
   const [step, setStep] = useState(1);
   const [userType, setUserType] = useState(null);
 
-  // Step 2
   const [activeTab, setActiveTab] = useState("signup");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,7 +19,7 @@ export default function CombinedRegistration() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((state) => state.auth);
+  const { loading } = useSelector((state) => state.auth);
 
   const handleTypeSelection = (type) => {
     setUserType(type);
@@ -77,7 +77,6 @@ export default function CombinedRegistration() {
             </h2>
 
             <div className="flex flex-col md:flex-row justify-center gap-6 mb-12">
-              {/* Client Card - Fixed */}
               <div
                 className={`border-2 rounded-xl p-6 cursor-pointer flex items-start gap-4 relative
                 ${
@@ -85,7 +84,6 @@ export default function CombinedRegistration() {
                 }`}
                 onClick={() => handleTypeSelection("client")}
               >
-                {/* Radio button moved to left side */}
                 <div className="h-6 w-6 rounded-full border-2 border-gray-300 flex items-center justify-center mr-2">
                   {userType === "client" && (
                     <div className="h-3 w-3 rounded-full bg-green-500"></div>
@@ -101,7 +99,6 @@ export default function CombinedRegistration() {
                 </div>
               </div>
 
-              {/* Freelancer Card - Fixed */}
               <div
                 className={`border-2 rounded-xl p-6 cursor-pointer flex items-start gap-4 relative
                 ${
@@ -111,7 +108,6 @@ export default function CombinedRegistration() {
                 }`}
                 onClick={() => handleTypeSelection("freelancer")}
               >
-                {/* Radio button moved to left side */}
                 <div className="h-6 w-6 rounded-full border-2 border-gray-300 flex items-center justify-center mr-2">
                   {userType === "freelancer" && (
                     <div className="h-3 w-3 rounded-full bg-green-500"></div>
@@ -165,7 +161,6 @@ export default function CombinedRegistration() {
     );
   }
 
-  // Step 2
   return (
     <div className="min-h-screen bg-green-50 flex items-center justify-center">
       <div className="w-full max-w-6xl mx-auto flex rounded-lg overflow-hidden shadow-lg">
@@ -207,11 +202,7 @@ export default function CombinedRegistration() {
             </div>
           </div>
 
-          {/* {error && (
-            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
-              {error.message || "Login failed. Please try again."}
-            </div>
-          )} */}
+          
           <form onSubmit={handleSignup}>
             <div className="mb-2">
               <label htmlFor="fullName" className="block text-gray-700 mb-2">
@@ -316,64 +307,10 @@ export default function CombinedRegistration() {
           </form>
         </div>
 
-        {/* Right Panel - Illustration */}
-        <div className="hidden lg:block lg:w-1/2 bg-gray-800 p-12 relative">
-          <h1 className="text-3xl font-bold text-white text-center mb-8">
-            WorkPlace
-          </h1>
-
+        <div className="hidden lg:block lg:w-1/2 bg-green-100 p-12 relative">
+          <h1 className="text-3xl font-bold  text-center mb-8">WorkPlace</h1>
           <div className="flex flex-col items-center justify-center h-full">
-            <div className="absolute top-24 right-24">
-              <div className="bg-green-100 w-24 h-24 rounded-full"></div>
-            </div>
-            <div className="absolute top-16 left-20">
-              <div className="bg-red-200 w-16 h-16 rounded-full"></div>
-            </div>
-            <div className="absolute top-32 right-36">
-              <div className="bg-orange-300 w-36 h-16 rounded-lg"></div>
-            </div>
-            <div className="absolute top-24 left-32">
-              <div className="bg-gray-400 w-16 h-16 rounded-lg"></div>
-            </div>
-            <div className="absolute top-16 right-12">
-              <div className="bg-blue-100 w-20 h-20 rounded-full"></div>
-            </div>
-
-            <div className="mt-48 relative">
-              <div className="flex justify-center space-x-1">
-                <div className="relative w-16 h-48">
-                  <div className="absolute bottom-0 w-16 h-32 bg-gray-300 rounded-t-full"></div>
-                  <div className="absolute bottom-24 left-3 w-10 h-10 bg-gray-700 rounded-full"></div>
-                  <div className="absolute bottom-0 left-0 w-16 h-16 bg-green-700"></div>
-                  <div className="absolute bottom-16 w-16 h-8 bg-gray-400"></div>
-                </div>
-
-                <div className="relative w-16 h-48">
-                  <div className="absolute bottom-0 w-16 h-32 bg-pink-300 rounded-t-full"></div>
-                  <div className="absolute bottom-24 left-3 w-10 h-10 bg-orange-300 rounded-full"></div>
-                  <div className="absolute bottom-0 left-0 w-12 h-16 bg-pink-200"></div>
-                  <div className="absolute bottom-16 w-16 h-8 bg-orange-400"></div>
-                </div>
-
-                <div className="relative w-16 h-48">
-                  <div className="absolute bottom-0 w-16 h-32 bg-blue-200 rounded-t-full"></div>
-                  <div className="absolute bottom-24 left-3 w-10 h-10 bg-gray-700 rounded-full"></div>
-                  <div className="absolute bottom-0 left-0 w-16 h-12 bg-gray-800"></div>
-                </div>
-
-                <div className="relative w-16 h-48">
-                  <div className="absolute bottom-0 w-16 h-32 bg-green-200 rounded-t-full"></div>
-                  <div className="absolute bottom-24 left-3 w-10 h-10 bg-teal-700 rounded-full"></div>
-                  <div className="absolute bottom-0 left-0 w-16 h-12 bg-red-700"></div>
-                </div>
-
-                <div className="relative w-16 h-48">
-                  <div className="absolute bottom-0 w-16 h-32 bg-red-400 rounded-t-full"></div>
-                  <div className="absolute bottom-24 left-3 w-10 h-10 bg-red-300 rounded-full"></div>
-                  <div className="absolute bottom-0 left-0 w-16 h-16 bg-green-700"></div>
-                </div>
-              </div>
-            </div>
+            <img src={p2} alt="Workplace Image" className="max-w-full h-auto" />
           </div>
         </div>
       </div>
