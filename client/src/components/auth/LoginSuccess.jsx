@@ -8,7 +8,7 @@ function LoginSuccess() {
   useEffect(() => {
     const fetchUser = async () => {
       const params = new URLSearchParams(window.location.search);
-      const token = params.get("access_token");
+      const token = params.get("accessToken");
 
       if (!token) {
         return navigate("/login");
@@ -27,7 +27,7 @@ function LoginSuccess() {
           }
         );
 
-        localStorage.setItem("user", JSON.stringify(res.data.user));
+        // localStorage.setItem("user", JSON.stringify(res.data.user));
         navigate("/");
       } catch (error) {
         console.error("user fetching error", error);

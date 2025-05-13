@@ -100,11 +100,7 @@ export const verifyOtp = async (req, res) => {
     user.otpExpiry = undefined;
     await user.save();
 
-    const { accessToken, refreshToken } = generateTokens(
-      user._id,
-      user.email,
-      user.role
-    );
+    const { accessToken, refreshToken } = generateTokens(user._id, user.email);
 
     await storeRefreshToken(user._id, refreshToken);
 
@@ -338,11 +334,7 @@ export const login = async (req, res) => {
         .json({ success: false, message: "Invalid credentials" });
     }
 
-    const { accessToken, refreshToken } = generateTokens(
-      user._id,
-      user.email,
-      user.role
-    );
+    const { accessToken, refreshToken } = generateTokens(user._id, user.email);
     await storeRefreshToken(user._id, refreshToken);
 
     res.cookie("accessToken", accessToken, {
@@ -357,7 +349,7 @@ export const login = async (req, res) => {
       secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: "strict",
-      path: "/api/auth/refresh", 
+      path: "/api/auth/refresh",
     });
 
     return res.status(201).json({
@@ -399,8 +391,7 @@ export const refresh = async (req, res) => {
 
     const { accessToken, newRefreshToken } = generateTokens(
       user._id,
-      user.email,
-      user.role
+      user.email
     );
     await storeRefreshToken(user._id, newRefreshToken);
 
@@ -480,7 +471,6 @@ export const googleCallback = async (req, res) => {
     const { accessToken, refreshToken } = generateTokens(
       user._id,
       user.email,
-      "client"
     );
 
     await User.findByIdAndUpdate(user._id, { refreshToken });

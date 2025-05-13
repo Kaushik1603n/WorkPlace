@@ -7,26 +7,26 @@ import { toast } from "react-toastify";
 import p2 from "../../assets/pp1.svg";
 
 export default function LoginPage() {
-  // const apiUrl = import.meta.env.VITE_API_BASE_URL;
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const [activeTab, setActiveTab] = useState("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [load, setLoad] = useState(false);
+  const [load, setLoad] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading } = useSelector((state) => state.auth);
 
   const handleGoogleLogin = () => {
-    // try {
-    //   setLoad(true);
-    //   const googleLoginUrl = `${apiUrl}/auth/google`;
-    //   window.location.href = googleLoginUrl;
-    // } catch (error) {
-    //   console.log("error login with google", error);
-    // } finally {
-    //   setLoad(false);
-    // }
+    try {
+      setLoad(true);
+      const googleLoginUrl = `${apiUrl}/auth/google`;
+      window.location.href = googleLoginUrl;
+    } catch (error) {
+      console.log("error login with google", error);
+    } finally {
+      setLoad(false);
+    }
   };
 
 
@@ -157,7 +157,6 @@ export default function LoginPage() {
 
             <button
               onClick={handleGoogleLogin}
-              disabled={true}
               type="button"
               className="w-full flex items-center justify-center bg-green-500 hover:bg-green-600 text-white py-3 rounded-md font-medium transition duration-200"
             >

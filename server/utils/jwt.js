@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 
-const generateTokens = (userId, email, role) => {
+const generateTokens = (userId, email) => {
   const accessToken = jwt.sign(
-    { userId, email, role },
+    { userId, email },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: '15m' } 
   );
