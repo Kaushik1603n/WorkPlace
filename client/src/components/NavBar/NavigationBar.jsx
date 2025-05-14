@@ -6,7 +6,8 @@ import { logoutUser } from "../../features/auth/authSlice";
 
 export default function NavigationBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  console.log(user);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,44 +22,75 @@ export default function NavigationBar() {
     }
   };
   return (
-    <nav className="bg-green-50 px-4 py-4 flex items-center justify-between relative">
+    <nav className="bg-white px-4 py-4 flex items-center justify-between relative shadow-lg border-b border-gray-100">
       <div className="flex items-center space-x-8">
         <h1 className="text-xl font-bold">WorkPlace</h1>
         <div className="hidden md:flex space-x-6">
-          <a href="#" className="text-green-600 font-medium">
+          <a
+            href="#"
+            className="text-green-600 font-medium hover:text-green-800 transition-colors"
+          >
             Home
           </a>
-          <a href="#" className="text-gray-700 hover:text-green-600">
-            Market place
-          </a>
-          <a href="#" className="text-gray-700 hover:text-green-600">
-            Freelancers
-          </a>
-          <a href="#" className="text-gray-700 hover:text-green-600">
-            Client
-          </a>
-          <a href="#" className="text-gray-700 hover:text-green-600">
+          <a
+            href="#"
+            className="text-gray-700 hover:text-green-600 transition-colors"
+          >
             About
           </a>
+
+          <a
+            href="#"
+            className="text-gray-700 hover:text-green-600 transition-colors"
+          >
+            Market place
+          </a>
+
+          {user?.role && (
+            <a
+              href="#"
+              className="text-gray-700 hover:text-green-600 transition-colors"
+            >
+              Dashboard
+            </a>
+          )}
+          {user?.role === "freelancer" && (
+            <a
+              href="#"
+              className="text-gray-700 hover:text-green-600 transition-colors"
+            >
+              Find Client
+            </a>
+          )}
+          {user?.role === "client" && (
+            <a
+              href="#"
+              className="text-gray-700 hover:text-green-600 transition-colors"
+            >
+              Find Freelancers
+            </a>
+          )}
         </div>
       </div>
 
       {/* Mobile menu button */}
-      <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+      <button
+        className="md:hidden text-gray-700 hover:text-green-600 transition-colors"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+      >
         {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
-      {/* Desktop buttons */}
-      <div className="hidden md:flex space-x-2">
+      <div className="hidden md:flex space-x-3">
         {!isAuthenticated ? (
           <>
             <Link to="/login">
-              <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition">
+              <button className="bg-green-500 text-white px-5 py-2 rounded-md hover:bg-green-600 transition shadow-sm hover:shadow">
                 LogIn
               </button>
             </Link>
             <Link to="/register">
-              <button className="border border-green-500 text-green-500 px-4 py-2 rounded-md hover:bg-green-50 transition">
+              <button className="border border-green-500 text-green-500 px-5 py-2 rounded-md hover:bg-green-50 transition shadow-sm hover:shadow">
                 SignUp
               </button>
             </Link>
@@ -66,7 +98,7 @@ export default function NavigationBar() {
         ) : (
           <button
             onClick={handleLogout}
-            className="bg-red-400 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
+            className="bg-red-400 text-white px-5 py-2 rounded-md hover:bg-red-600 transition shadow-sm hover:shadow"
           >
             Logout
           </button>
@@ -75,33 +107,62 @@ export default function NavigationBar() {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="absolute top-full left-0 right-0 bg-green-50 p-4 md:hidden z-50">
-          <div className="flex flex-col space-y-3">
-            <a href="#" className="text-green-600 font-medium">
+        <div className="absolute top-full left-0 right-0 bg-white p-5 md:hidden z-50 shadow-lg border-t border-gray-100">
+          <div className="flex flex-col space-y-4">
+            <a
+              href="#"
+              className="text-green-600 font-medium hover:text-green-800 transition-colors"
+            >
               Home
             </a>
-            <a href="#" className="text-gray-700 hover:text-green-600">
-              Market place
-            </a>
-            <a href="#" className="text-gray-700 hover:text-green-600">
-              Freelancers
-            </a>
-            <a href="#" className="text-gray-700 hover:text-green-600">
-              Client
-            </a>
-            <a href="#" className="text-gray-700 hover:text-green-600">
+            <a
+              href="#"
+              className="text-gray-700 hover:text-green-600 transition-colors"
+            >
               About
             </a>
-            <div className="flex flex-col space-y-2 pt-2">
+
+            <a
+              href="#"
+              className="text-gray-700 hover:text-green-600 transition-colors"
+            >
+              Market place
+            </a>
+
+            {user?.role && (
+              <a
+                href="#"
+                className="text-gray-700 hover:text-green-600 transition-colors"
+              >
+                Dashboard
+              </a>
+            )}
+            {user?.role === "freelancer" && (
+              <a
+                href="#"
+                className="text-gray-700 hover:text-green-600 transition-colors"
+              >
+                Find Client
+              </a>
+            )}
+            {user?.role === "client" && (
+              <a
+                href="#"
+                className="text-gray-700 hover:text-green-600 transition-colors"
+              >
+                Find Freelancers
+              </a>
+            )}
+            <div className="flex flex-col space-y-3 pt-3">
               {!isAuthenticated ? (
                 <>
                   <Link to="/login">
-                    <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition">
+                    <button className="bg-green-500 text-white w-full px-5 py-2 rounded-md hover:bg-green-600 transition shadow-sm hover:shadow">
                       LogIn
                     </button>
                   </Link>
                   <Link to="/register">
-                    <button className="border border-green-500 text-green-500 px-4 py-2 rounded-md hover:bg-green-50 transition">
+                    <button className="border border-green-500 text-green-500 w-full px-5 py-2 rounded-md hover:bg-green-50 transition shadow-sm hover:shadow">
                       SignUp
                     </button>
                   </Link>
@@ -109,11 +170,11 @@ export default function NavigationBar() {
               ) : (
                 <button
                   onClick={handleLogout}
-                  className="bg-red-400 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
+                  className="bg-red-400 text-white w-full px-5 py-2 rounded-md hover:bg-red-600 transition shadow-sm hover:shadow"
                 >
                   Logout
                 </button>
-              )}    
+              )}
             </div>
           </div>
         </div>
