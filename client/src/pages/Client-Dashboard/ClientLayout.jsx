@@ -1,0 +1,23 @@
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import NavigationBar from '../../components/NavBar/NavigationBar';
+import Sidebar from '../../components/Client/SideBar';
+
+const ClientLayout = () => {
+  return (
+    <div className="flex flex-col h-screen overflow-hidden">
+      <NavigationBar />
+
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar />
+
+        {/* Main content will be injected here */}
+        <main className="flex-1 overflow-y-auto p-4">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default ClientLayout;

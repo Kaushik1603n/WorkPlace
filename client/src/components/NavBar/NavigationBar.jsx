@@ -47,12 +47,12 @@ export default function NavigationBar() {
           </a>
 
           {user?.role && (
-            <a
-              href="#"
+            <Link
+              to="/client-dashboard"
               className="text-gray-700 hover:text-green-600 transition-colors"
             >
               Dashboard
-            </a>
+            </Link>
           )}
           {user?.role === "freelancer" && (
             <a
