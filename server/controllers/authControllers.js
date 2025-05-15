@@ -56,7 +56,7 @@ export const register = async (req, res) => {
       userId: user._id,
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
@@ -118,7 +118,6 @@ export const verifyOtp = async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       ...cookieOptions,
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: "/api/auth/refresh",
     });
 
     return res.status(200).json({
@@ -174,7 +173,6 @@ export const resendOtp = async (req, res) => {
 // Forgot password
 export const forgotPass = async (req, res) => {
   const { email } = req.body;
-  console.log(email);
 
   if (!email) {
     return res.status(400).json({
@@ -255,7 +253,6 @@ export const resetPassVerifyOtp = async (req, res) => {
 
 export const changePassword = async (req, res) => {
   const { userId, newPassword, confirmPassword } = req.body;
-  console.log(userId, newPassword, confirmPassword);
 
   try {
     if (!userId || !newPassword || !confirmPassword) {
@@ -340,16 +337,16 @@ export const login = async (req, res) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 15 * 60 * 1000, // 15 minutes
+      maxAge: 30 * 1000, // 15 minutes
       sameSite: "strict",
     });
+    console.log(refreshToken, "refresh token");
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: "strict",
-      path: "/api/auth/refresh",
     });
 
     return res.status(201).json({
@@ -372,28 +369,31 @@ export const login = async (req, res) => {
 
 export const refresh = async (req, res) => {
   try {
-    const refreshToken = req.cookies?.refreshToken;
-    if (!refreshToken) {
+    console.log("Incoming cookies:", req.cookies); // Add this line
+    console.log("Refresh token from cookies:", req.cookies?.refreshToken);
+
+    const checkRefreshToken = req.cookies?.refreshToken;
+    if (!checkRefreshToken) {
+      console.log("No refresh token found in cookies");
+
       return res
         .status(401)
         .json({ success: false, message: "Refresh token required" });
     }
 
     // Verify refresh token
-    const decoded = verifyRefreshToken(refreshToken);
+    const decoded = verifyRefreshToken(checkRefreshToken);
 
     const user = await User.findById(decoded.userId);
-    if (!user || user.refreshToken !== refreshToken) {
+    if (!user || user.refreshToken !== checkRefreshToken) {
       return res
         .status(403)
         .json({ success: false, message: "Invalid refresh token" });
     }
 
-    const { accessToken, newRefreshToken } = generateTokens(
-      user._id,
-      user.email
-    );
-    await storeRefreshToken(user._id, newRefreshToken);
+        const { accessToken, refreshToken} = generateTokens(user._id, user.email);
+
+    await storeRefreshToken(user._id, refreshToken);
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
@@ -402,12 +402,11 @@ export const refresh = async (req, res) => {
       sameSite: "strict",
     });
 
-    res.cookie("refreshToken", newRefreshToken, {
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: "strict",
-      path: "/api/auth/refresh",
     });
 
     return res.json({ success: true, accessToken });
@@ -483,9 +482,7 @@ export const googleCallback = async (req, res) => {
       secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: "Strict",
-      path: "/api/auth/refresh",
     });
-    console.log(user);
 
     res.redirect(
       `${process.env.CLIENT_URL}/success-login?accessToken=${accessToken}`
@@ -501,7 +498,7 @@ export const googleCallback = async (req, res) => {
 export const getUser = async (req, res) => {
   try {
     if (!req.user) {
-     return res.status(401).json({ message: "user not authenticated" });
+      return res.status(401).json({ message: "user not authenticated" });
     }
     res.json({ user: req.user });
   } catch (error) {

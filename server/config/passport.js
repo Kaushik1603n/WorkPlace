@@ -35,7 +35,6 @@ passport.use(new GoogleStrategy({
         email: profile.emails[0].value,
         isVerified: true,
       });
-      console.log(user);
       
     } else if (!user.googleId) {
       user.googleId = profile.id;
