@@ -49,7 +49,7 @@ export default function ClientProfile() {
       {/* Banner and Profile Image */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8 border border-color">
         <div className="relative">
-          <div className="w-full h-40 overflow-hidden">
+          <div className="w-full aspect-[5.5/1] overflow-hidden bg-amber-50">
             <img
               src={cover}
               alt="Profile Banner"

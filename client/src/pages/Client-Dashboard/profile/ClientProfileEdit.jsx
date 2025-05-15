@@ -1,5 +1,8 @@
+import "react-image-crop/dist/ReactCrop.css";
 import { useState } from "react";
 import { Link as LinkIcon } from "lucide-react";
+import CoverModal from "./CoverModal";
+import ReactCrop from "react-image-crop";
 
 export default function ClientProfileEdit() {
   const [profileData, setProfileData] = useState({
@@ -10,7 +13,7 @@ export default function ClientProfileEdit() {
     website: "",
     description: "",
   });
-
+  const [modalOpen, setModalOpen] = useState(false);
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [coverPhoto, setCoverPhoto] = useState(null);
 
@@ -81,7 +84,7 @@ export default function ClientProfileEdit() {
         <label className="block font-medium text-gray-700 mb-2">
           Cover Photo
         </label>
-        <div className="w-full h-28 bg-gray-100 rounded-md overflow-hidden mb-2">
+        <div className="w-full aspect-[5.5/1] bg-gray-100 rounded-md overflow-hidden mb-2">
           {coverPhoto ? (
             <img
               src={coverPhoto}
@@ -94,16 +97,13 @@ export default function ClientProfileEdit() {
             </div>
           )}
         </div>
-        <label className="text-sm text-blue-600 hover:underline cursor-pointer flex items-center gap-1">
+        <button
+          className="text-sm text-blue-600 hover:underline cursor-pointer flex items-center gap-1"
+          onClick={() => setModalOpen(true)}
+        >
           <LinkIcon size={16} />
-          Choose Cover Photo
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => handleImageUpload(e, "cover")}
-          />
-        </label>
+          Edit Cover Photo
+        </button>
       </div>
 
       {/* Form Fields */}
@@ -152,7 +152,7 @@ export default function ClientProfileEdit() {
 
         <div>
           <label className="block font-medium text-gray-700 mb-1">
-            L ocation
+            Location
           </label>
           <input
             type="text"
@@ -199,6 +199,12 @@ export default function ClientProfileEdit() {
           Update Profile
         </button>
       </div>
+      {modalOpen && (
+        <CoverModal
+          updateCover={setCoverPhoto}
+          closeModal={() => setModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
