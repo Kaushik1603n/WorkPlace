@@ -3,6 +3,9 @@ import { useState } from "react";
 import { Link as LinkIcon } from "lucide-react";
 import CoverModal from "./CoverModal";
 import ReactCrop from "react-image-crop";
+import { toast } from "react-toastify";
+import axios from 'axios';
+
 
 export default function ClientProfileEdit() {
   const [profileData, setProfileData] = useState({
@@ -30,13 +33,81 @@ export default function ClientProfileEdit() {
     }
   };
 
-  const handleSubmit = () => {
-    console.log("Submitted:", {
-      ...profileData,
-      profilePhoto,
-      coverPhoto,
+  const blobToBase64 = async (blobUrl) => {
+    const response = await fetch(blobUrl);
+    const blob = await response.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
     });
-    // Implement your backend integration logic here
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { fullName, companyName, email, location, website, description } =
+      profileData;
+
+    // Basic validation
+    if (!fullName.trim()) {
+      toast.error("Full Name is required.");
+      return;
+    }
+    if (!companyName.trim()) {
+      toast.error("Company Name is required.");
+      return;
+    }
+    if (!email.trim()) {
+      toast.error("Email is required.");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Enter a valid email address.");
+      return;
+    }
+    if (!location.trim()) {
+      toast.error("Location is required.");
+      return;
+    }
+    if (!website.trim()) {
+      toast.error("Website is required.");
+      return;
+    }
+    const urlRegex = /^(https?:\/\/)([\w.-]+)\.([a-z]{2,})(\/\S*)?$/i;
+    if (!urlRegex.test(website)) {
+      toast.error("Enter a valid website URL.");
+      return;
+    }
+    if (!description.trim()) {
+      toast.error("Description is required.");
+      return;
+    }
+
+    const profilePhotoBase64 = await blobToBase64(profilePhoto);
+    setProfilePhoto(profilePhotoBase64);
+
+    const formData = {
+      companyName: profileData.companyName,
+      description: profileData.description,
+      email: profileData.email,
+      fullName: profileData.fullName,
+      location: profileData.location,
+      website: profileData.website,
+      CoverPic: coverPhoto,
+      profilePic: profilePhoto,
+    };
+
+   try {
+  const response = await axios.post("http://localhost:5000/api/client/edit-profile", formData, {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+  console.log("Upload success:", response.data);
+} catch (error) {
+  console.error("Upload failed:", error);
+}
   };
 
   return (
@@ -156,7 +227,7 @@ export default function ClientProfileEdit() {
           </label>
           <input
             type="text"
-            name="companyName"
+            name="location"
             value={profileData.location}
             onChange={handleChange}
             placeholder="Enter your location"

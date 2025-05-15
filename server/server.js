@@ -43,6 +43,7 @@ connectDB();
 
 // Routes 
 app.use("/api/auth", (await import("./routes/auth.js")).default)
+app.use("/api/client", (await import("./routes/client.js")).default)
 
 
 // Server start

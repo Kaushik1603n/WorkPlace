@@ -11,7 +11,7 @@ const ClientProfileSchema = new mongoose.Schema(
     profilePic: { type: String },
     CoverPic: { type: String },
     companyName: { type: String },
-    industry: { type: String },
+    location: { type: String },
     website: { type: String },
     description: { type: String },
     totalJobsPosted: { type: Number, default: 0 },
