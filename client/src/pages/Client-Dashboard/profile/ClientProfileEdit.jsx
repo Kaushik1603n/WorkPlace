@@ -1,11 +1,16 @@
 import "react-image-crop/dist/ReactCrop.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link as LinkIcon } from "lucide-react";
 import CoverModal from "./CoverModal";
 import ReactCrop from "react-image-crop";
 import { toast } from "react-toastify";
-import axios from 'axios';
-
+// import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+import {
+  getClientProfile,
+  updateClientProfile,
+} from "../../../features/clientProgile/clientProgileSlice";
 
 export default function ClientProfileEdit() {
   const [profileData, setProfileData] = useState({
@@ -16,9 +21,38 @@ export default function ClientProfileEdit() {
     website: "",
     description: "",
   });
+
   const [modalOpen, setModalOpen] = useState(false);
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [coverPhoto, setCoverPhoto] = useState(null);
+
+  const dispatch = useDispatch();
+  // const navigate = useNavigate();
+  const { loading, client } = useSelector((state) => state.client);
+  const { user } = useSelector((state) => state.auth);
+  useEffect(() => {
+    dispatch(getClientProfile())
+      .unwrap()
+      .then(() => {})
+      .catch((error) => {
+        console.error(error?.message);
+      });
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user || client) {
+      setProfileData({
+        fullName: user?.fullName || "",
+        companyName: client?.companyName || "",
+        email: user?.email || "",
+        location: client?.location || "",
+        website: client?.website || "",
+        description: client?.description || "",
+      });
+      setCoverPhoto(client?.CoverPic || null);
+      setProfilePhoto(client?.profilePic || null);
+    }
+  }, [user, client]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -84,8 +118,40 @@ export default function ClientProfileEdit() {
       return;
     }
 
-    const profilePhotoBase64 = await blobToBase64(profilePhoto);
-    setProfilePhoto(profilePhotoBase64);
+    // if (
+    //   user.fullName !== fullName ||
+    //   client.companyName !== companyName ||
+    //   user.email !== email ||
+    //   client.location !== location ||
+    //   client.website !== website ||
+    //   client.description !== description ||
+    //   setImg
+    // ) {
+    //   toast.error("different");
+    // } else {
+    //   toast.info("No changes detected");
+    //   return;
+    // }
+    const isChanged =
+      user?.fullName !== fullName ||
+      client?.companyName !== companyName ||
+      user?.email !== email ||
+      client?.location !== location ||
+      client?.website !== website ||
+      client?.description !== description ||
+      client?.profilePic !== profilePhoto ||
+      client?.CoverPic !== coverPhoto;
+
+    if (!isChanged) {
+      toast.info("No changes detected");
+      return;
+    }
+
+    let profilePhotoBase64 = undefined;
+    if (client?.profilePic !== profilePhoto) {
+      profilePhotoBase64 = await blobToBase64(profilePhoto);
+      setProfilePhoto(profilePhotoBase64);
+    }
 
     const formData = {
       companyName: profileData.companyName,
@@ -95,19 +161,19 @@ export default function ClientProfileEdit() {
       location: profileData.location,
       website: profileData.website,
       CoverPic: coverPhoto,
-      profilePic: profilePhoto,
+      profilePic: profilePhotoBase64 || profilePhoto,
     };
 
-   try {
-  const response = await axios.post("http://localhost:5000/api/client/edit-profile", formData, {
-    headers: {
-      "Content-Type": "application/json"
-    }
-  });
-  console.log("Upload success:", response.data);
-} catch (error) {
-  console.error("Upload failed:", error);
-}
+    dispatch(updateClientProfile(formData))
+      .unwrap()
+      .then((client) => {
+        console.log(client);
+        toast.success("Profile Update successfully");
+      })
+      .catch((error) => {
+        console.log(error?.error);
+        toast.error(error?.error);
+      });
   };
 
   return (
@@ -143,7 +209,9 @@ export default function ClientProfileEdit() {
                 type="file"
                 accept="image/*"
                 className="hidden"
-                onChange={(e) => handleImageUpload(e, "profile")}
+                onChange={(e) => {
+                  handleImageUpload(e, "profile");
+                }}
               />
             </label>
           </div>
@@ -170,7 +238,9 @@ export default function ClientProfileEdit() {
         </div>
         <button
           className="text-sm text-blue-600 hover:underline cursor-pointer flex items-center gap-1"
-          onClick={() => setModalOpen(true)}
+          onClick={() => {
+            setModalOpen(true);
+          }}
         >
           <LinkIcon size={16} />
           Edit Cover Photo
@@ -186,7 +256,7 @@ export default function ClientProfileEdit() {
           <input
             type="text"
             name="fullName"
-            value={profileData.fullName}
+            value={profileData?.fullName}
             onChange={handleChange}
             placeholder="Enter your full name"
             className="w-full border border-[#27AE60] rounded-md px-3 py-2 focus:ring-green-500 focus:outline-none focus:border-green-500"
@@ -265,9 +335,10 @@ export default function ClientProfileEdit() {
 
         <button
           onClick={handleSubmit}
+          disabled={loading}
           className="w-full bg-[#2ECC71] hover:bg-[#27AE60] text-white font-semibold py-3 rounded-md transition"
         >
-          Update Profile
+          {loading ? "Updating Profile..." : "Update Profile"}
         </button>
       </div>
       {modalOpen && (

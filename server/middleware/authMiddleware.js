@@ -1,11 +1,9 @@
 import { verifyAccessToken } from "../utils/jwt.js";
 
 const authenticate = async (req, res, next) => {
-
   const accessToken =
     req.cookies?.accessToken ||
     req.header("Authorization")?.replace("Bearer ", "");
-    
 
   if (!accessToken) {
     return res.status(401).json({ success: false, message: "Access denied" });
@@ -14,8 +12,6 @@ const authenticate = async (req, res, next) => {
   try {
     const decoded = verifyAccessToken(accessToken);
     req.user = decoded;
-    console.log(decoded);
-    
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {

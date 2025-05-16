@@ -51,7 +51,6 @@ export default function LoginPage() {
     dispatch(loginUser({ email, password }))
       .unwrap()
       .then((user) => {
-        console.log(user);
         toast.success("Login successful");
         navigate("/home");
       })

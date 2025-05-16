@@ -1,9 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import cover from "../../../assets/cover.png";
 import avatar from "../../../assets/p1.jpg";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getClientProfile } from "../../../features/clientProgile/clientProgileSlice";
 
 export default function ClientProfile() {
+  const dispatch = useDispatch();
+  const { client } = useSelector((state) => state.client);
+  const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    dispatch(getClientProfile())
+      .unwrap()
+      .then(() => {})
+      .catch((error) => {
+        console.error(error?.message);
+      });
+  }, [dispatch]);
+
   const [projectStats] = useState({
     completed: 10,
     pending: 2,
@@ -51,7 +66,7 @@ export default function ClientProfile() {
         <div className="relative">
           <div className="w-full aspect-[5.5/1] overflow-hidden bg-amber-50">
             <img
-              src={cover}
+              src={client?.CoverPic ? client.CoverPic : cover}
               alt="Profile Banner"
               className="w-full object-cover"
             />
@@ -61,18 +76,11 @@ export default function ClientProfile() {
           <div className="absolute left-4 bottom-0 transform translate-y-1/2">
             <div className="h-30 w-30 rounded-full bg-white p-1 shadow-md">
               <img
-                src={avatar}
+                src={client?.profilePic ? client.profilePic : avatar}
                 alt="Profile"
                 className="h-full w-full rounded-full object-cover"
               />
             </div>
-          </div>
-
-          {/* Edit Profile Button */}
-          <div className="absolute right-4 bottom-4">
-            <button className="bg-white text-gray-700 hover:bg-gray-100 py-1 px-3 rounded-md text-sm shadow-sm border border-gray-200">
-              Edit Cover
-            </button>
           </div>
         </div>
 
@@ -82,9 +90,9 @@ export default function ClientProfile() {
             {/* Profile Info Section */}
             <div className="w-full md:w-1/3">
               <h2 className="text-xl font-semibold text-gray-800">
-                Madhav G S
+                {user?.fullName}
               </h2>
-              <p className="text-gray-600 mt-1">PTR company</p>
+              <p className="text-gray-600 mt-1">{client?.companyName}</p>
 
               <div className="mt-4 space-y-2">
                 <div className="flex items-center text-gray-600">
@@ -107,7 +115,7 @@ export default function ClientProfile() {
                       d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                     />
                   </svg>
-                  <span>San Francisco, CA</span>
+                  <span>{client?.location}</span>
                 </div>
 
                 <div className="flex items-center text-gray-600">
@@ -124,7 +132,13 @@ export default function ClientProfile() {
                       d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                     />
                   </svg>
-                  <span>Member since March 2023</span>
+                  <span>
+                    {new Date(user?.createdAt).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </span>
                 </div>
 
                 <div className="flex items-center text-gray-600">
@@ -141,7 +155,7 @@ export default function ClientProfile() {
                       d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                     />
                   </svg>
-                  <span>jessica.anderson@example.com</span>
+                  <span>{user?.email}</span>
                 </div>
               </div>
 
