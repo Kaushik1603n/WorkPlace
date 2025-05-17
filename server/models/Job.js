@@ -9,15 +9,17 @@ const JobSchema = new mongoose.Schema(
     },
     title: { type: String, required: true },
     description: { type: String, required: true },
-    RequiredFeatures: { type: String },
+    requiredFeatures: { type: String },
     stack: { type: String },
-    skillsRequired: [{ type: mongoose.Schema.Types.ObjectId, ref: "Skill" }],
-    budgetType: { type: String, enum: ["fixed", "hourly"], required: true },
-    budgetRange: {
-      min: { type: Number },
-      max: { type: Number },
+    skills: {
+      type: [String], 
+      default: [],
     },
-    duration: { type: String, enum: ["short-term", "long-term", "ongoing"] },
+    budgetType: { type: String, enum: ["fixed", "hourly"], required: true },
+    budget: {
+      type: Number,
+    },
+    time: { type: String },
     experienceLevel: {
       type: String,
       enum: ["entry", "intermediate", "expert"],
@@ -25,7 +27,7 @@ const JobSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ["draft", "posted", "in-progress", "completed", "cancelled"],
-      default: "draft",
+      default: "posted",
     },
     proposals: [{ type: mongoose.Schema.Types.ObjectId, ref: "Proposal" }],
     visibility: {
@@ -33,7 +35,7 @@ const JobSchema = new mongoose.Schema(
       enum: ["public", "private"],
       default: "public",
     },
-    Reference: { type: String },
+    reference: { type: String },
     Attachments: [{ type: String }],
   },
   { timestamps: true }

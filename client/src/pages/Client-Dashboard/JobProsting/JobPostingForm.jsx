@@ -1,8 +1,12 @@
 import React, { useCallback, useState } from "react";
 import JobSkills from "./JobSkills";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { createNewJob } from "../../../features/project/projectSlice";
 
 function JobPostingForm() {
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState({
     jobTitle: "",
     description: "",
@@ -11,7 +15,7 @@ function JobPostingForm() {
     skills: [],
     time: "",
     budgetType: "fixed",
-    budget: '',
+    budget: "",
     experienceLevel: "entry",
     reference: "",
   });
@@ -68,7 +72,7 @@ function JobPostingForm() {
       toast.error("stack is required.");
       return;
     }
-    if (skills.length<1) {
+    if (skills.length < 1) {
       toast.error("Minimum One skill is required.");
       return;
     }
@@ -80,7 +84,7 @@ function JobPostingForm() {
       toast.error("Budget Type is required.");
       return;
     }
-    if (Number(budget)<1) {
+    if (Number(budget) < 1) {
       toast.error("Enter valid budget");
       return;
     }
@@ -97,8 +101,17 @@ function JobPostingForm() {
       toast.error("Enter a valid website URL.");
       return;
     }
-    console.log(formData);
-    
+
+     dispatch(createNewJob(formData))
+          .unwrap()
+          .then((project) => {
+            console.log(project);
+            toast.success("project created   successfully");
+          })
+          .catch((error) => {
+            console.log(error?.error);
+            toast.error(error?.error);
+          });
   };
 
   return (

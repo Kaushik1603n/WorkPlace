@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
 import clientReducer from '../features/clientProgile/clientProgileSlice';
 import freelancerReducer from '../features/freelancerProfile/freelancerProfileSlice';
+import clientProjectReducer from '../features/project/projectSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     client:clientReducer,
-    freelancer:freelancerReducer
+    freelancer:freelancerReducer,
+    clientProject:clientProjectReducer
   },
 });
 
