@@ -1,8 +1,11 @@
+import React from 'react'
 import { X } from "lucide-react";
-import ImageCropper from "./ImageCropper";
+import FreelancerImageCropper from './FreelancerImageCropper';
 
-const CoverModal = ({ updateCover, closeModal }) => {
+function FreelancerCoverModal({ updateCover, closeModal }) {
   return (
+    <div>
+       return (
     <div
       className="relative z-10"
       aria-labelledby="crop-image-dialog"
@@ -17,19 +20,21 @@ const CoverModal = ({ updateCover, closeModal }) => {
             <div className="px-5 py-4">
               <button
                 type="button"
-                className="rounded-md p-1 inline-flex items-center justify-center text-[#27AE60] hover:bg-[#EFFFF6]  focus:outline-none absolute top-2 right-2"
+                className="rounded-md p-1 inline-flex items-center justify-center text-[#27AE60] hover:bg-[#EFFFF6] focus:outline-none absolute top-2 right-2"
                 onClick={closeModal}
               >
                 <span className="sr-only">Close menu</span>
                 <X />
               </button>
-              <ImageCropper updateCover={updateCover} closeModal={closeModal} />
+              <FreelancerImageCropper updateCover={updateCover} closeModal={closeModal} />
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-};
+    </div>
+  )
+}
 
-export default CoverModal;
+export default FreelancerCoverModal

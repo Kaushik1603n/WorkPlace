@@ -23,7 +23,7 @@ export default function LoginPage() {
       const googleLoginUrl = `${apiUrl}/auth/google`;
       window.location.href = googleLoginUrl;
     } catch (error) {
-      console.log("error login with google", error);
+      console.error("error login with google", error);
     } finally {
       setLoad(false);
     }
@@ -50,12 +50,11 @@ export default function LoginPage() {
     }
     dispatch(loginUser({ email, password }))
       .unwrap()
-      .then((user) => {
+      .then(() => {
         toast.success("Login successful");
         navigate("/home");
       })
       .catch((error) => {
-        console.log(error?.message);
         toast.error(error?.message);
       });
   };

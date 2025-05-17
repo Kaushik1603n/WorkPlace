@@ -12,8 +12,12 @@ const FreelancerProfileSchema = new mongoose.Schema(
     bio: { type: String },
     profilePic: { type: String },
     CoverPic: { type: String },
-    skills: [{ type: mongoose.Schema.Types.ObjectId, ref: "Skill" }],
+    skills: {
+      type: [String], // Array of strings
+      default: [],
+    },
     hourlyRate: { type: Number },
+    location: { type: String },
     availability: {
       type: String,
       enum: ["full-time", "part-time", "not-available"],
@@ -22,16 +26,7 @@ const FreelancerProfileSchema = new mongoose.Schema(
       type: String,
       enum: ["entry", "intermediate", "expert"],
     },
-    education: [
-      {
-        institution: String,
-        degree: String,
-        fieldOfStudy: String,
-        startYear: Number,
-        endYear: Number,
-        description: String,
-      },
-    ],
+    education: { type: String },
     languages: [
       {
         language: String,

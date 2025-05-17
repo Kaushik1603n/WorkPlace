@@ -7,7 +7,6 @@ import { logoutUser } from "../../features/auth/authSlice";
 export default function NavigationBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-  console.log(user);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

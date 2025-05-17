@@ -23,7 +23,10 @@ import ClientDashboard from "./pages/Client-Dashboard/Dashboard";
 import ClientLayout from "./pages/Client-Dashboard/ClientLayout";
 import ClientProfile from "./pages/Client-Dashboard/profile/ClientProfile";
 import ClientProfileEdit from "./pages/Client-Dashboard/profile/ClientProfileEdit";
+import FreelancerDashboard from "./pages/Freelancer-Dashboard/Dashboard";
 import FreelancerLayout from "./pages/Freelancer-Dashboard/FreelancerLayout";
+import FreelancerProfile from "./pages/Freelancer-Dashboard/profile/FreelancerProfile";
+import FreelancerProfileEdit from "./pages/Freelancer-Dashboard/profile/FreelancerProfileEdit";
 
 function App() {
   const dispatch = useDispatch();
@@ -74,10 +77,10 @@ function App() {
         <Route path="/success-login" element={<LoginSuccess />} />
 
         <Route path="/client-dashboard" element={<ClientLayout />}>
-          <Route index  element={<ClientDashboard/>} />
+          <Route index element={<ClientDashboard />} />
           <Route path="payments" element={<div>Payment Page</div>} />
-          <Route path="profile" element={<ClientProfile/>} />
-          <Route path="profile/edit" element={<ClientProfileEdit/>} />
+          <Route path="profile" element={<ClientProfile />} />
+          <Route path="profile/edit" element={<ClientProfileEdit />} />
           <Route path="message" element={<div>Message Page</div>} />
           <Route path="notification" element={<div>Notification Page</div>} />
           <Route path="posting" element={<div>Project Posting Page</div>} />
@@ -89,12 +92,11 @@ function App() {
           <Route path="dispute" element={<div>Dispute Resolution Page</div>} />
         </Route>
 
-        
         <Route path="/freelancer-dashboard" element={<FreelancerLayout />}>
-          <Route index  element={<ClientDashboard/>} />
+          <Route index element={<FreelancerDashboard />} />
           <Route path="payments" element={<div>Payment Page</div>} />
-          <Route path="profile" element={<ClientProfile/>} />
-          <Route path="profile/edit" element={<ClientProfileEdit/>} />
+          <Route path="profile" element={<FreelancerProfile />} />
+          <Route path="profile/edit" element={<FreelancerProfileEdit />} />
           <Route path="message" element={<div>Message Page</div>} />
           <Route path="notification" element={<div>Notification Page</div>} />
           <Route path="calender" element={<div>Calender page</div>} />

@@ -9,7 +9,7 @@ import "react-image-crop/dist/ReactCrop.css";
 const ASPECT_RATIO = 5.5;
 const MIN_DIMENSION = 300;
 
-function ImageCropper({ updateCover, closeModal }) {
+function FreelancerImageCropper({ updateCover, closeModal }) {
   const imgRef = useRef(null);
   const previewCanvasRef = useRef(null);
   const [imgSrc, setImgSrc] = useState("");
@@ -93,7 +93,7 @@ function ImageCropper({ updateCover, closeModal }) {
   return (
     <>
       <label className="block mb-3 w-fit">
-        <span className="sr-only">Choose profile photo</span>
+        <span className="sr-only">Choose Cover photo</span>
         <input
           type="file"
           accept="image/*"
@@ -164,4 +164,4 @@ function ImageCropper({ updateCover, closeModal }) {
   );
 }
 
-export default ImageCropper;
+export default FreelancerImageCropper
