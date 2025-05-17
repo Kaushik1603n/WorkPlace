@@ -103,7 +103,6 @@ function FreelancerProfileEdit() {
       reference,
     } = profileData;
 
-    // Basic validation
     if (!fullName.trim()) {
       toast.error("Full Name is required.");
       return;

@@ -27,6 +27,7 @@ import FreelancerDashboard from "./pages/Freelancer-Dashboard/Dashboard";
 import FreelancerLayout from "./pages/Freelancer-Dashboard/FreelancerLayout";
 import FreelancerProfile from "./pages/Freelancer-Dashboard/profile/FreelancerProfile";
 import FreelancerProfileEdit from "./pages/Freelancer-Dashboard/profile/FreelancerProfileEdit";
+import JobPostingForm from "./pages/Client-Dashboard/JobProsting/JobPostingForm";
 
 function App() {
   const dispatch = useDispatch();
@@ -83,7 +84,7 @@ function App() {
           <Route path="profile/edit" element={<ClientProfileEdit />} />
           <Route path="message" element={<div>Message Page</div>} />
           <Route path="notification" element={<div>Notification Page</div>} />
-          <Route path="posting" element={<div>Project Posting Page</div>} />
+          <Route path="posting" element={<JobPostingForm/>} />
           <Route path="freelancer" element={<div>Freelancer Page</div>} />
           <Route
             path="interview"
