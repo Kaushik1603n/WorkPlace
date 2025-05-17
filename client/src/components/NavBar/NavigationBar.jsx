@@ -39,7 +39,7 @@ export default function NavigationBar() {
           </Link>
 
           <Link
-            to="#"
+            to="/market-place"
             className="text-gray-700 hover:text-green-600 transition-colors"
           >
             Market place
@@ -130,7 +130,7 @@ export default function NavigationBar() {
             </Link>
 
             <Link
-              to="#"
+              to="/market-place"
               className="text-gray-700 hover:text-green-600 transition-colors"
             >
               Market place

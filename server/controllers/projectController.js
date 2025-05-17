@@ -47,27 +47,19 @@ export const createNewProject = async (req, res) => {
     }
 
     // Create or update project
-    const newJob = await ProjectModule.findOneAndUpdate(
-      { clientId: userId },
-      {
-        title: jobTitle,
-        description: description,
-        requiredFeatures: requiredFeatures,
-        stack: stack,
-        skills: skills,
-        time: time,
-        budgetType: budgetType,
-        budget: budget,
-        experienceLevel: experienceLevel,
-        reference: reference,
-        clientId: userId, // Ensure clientId is set
-      },
-      {
-        new: true,
-        upsert: true,
-        runValidators: true, // Ensure validations are run
-      }
-    );
+    const newJob = await ProjectModule.create({
+      clientId: userId,
+      title: jobTitle,
+      description: description,
+      requiredFeatures: requiredFeatures,
+      stack: stack,
+      skills: skills,
+      time: time,
+      budgetType: budgetType,
+      budget: budget,
+      experienceLevel: experienceLevel,
+      reference: reference,
+    });
 
     return res.status(201).json({
       success: true,

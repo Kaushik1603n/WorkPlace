@@ -28,6 +28,7 @@ import FreelancerLayout from "./pages/Freelancer-Dashboard/FreelancerLayout";
 import FreelancerProfile from "./pages/Freelancer-Dashboard/profile/FreelancerProfile";
 import FreelancerProfileEdit from "./pages/Freelancer-Dashboard/profile/FreelancerProfileEdit";
 import JobPostingForm from "./pages/Client-Dashboard/JobProsting/JobPostingForm";
+import MarketPlace from "./pages/MarketPlace/MarketPlace";
 
 function App() {
   const dispatch = useDispatch();
@@ -74,8 +75,6 @@ function App() {
           <Route path="/change-pass" element={<Navigate to="/" />} />
           <Route path="/home" element={<HomePage />} />
         </Route>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/success-login" element={<LoginSuccess />} />
 
         <Route path="/client-dashboard" element={<ClientLayout />}>
           <Route index element={<ClientDashboard />} />
@@ -84,7 +83,7 @@ function App() {
           <Route path="profile/edit" element={<ClientProfileEdit />} />
           <Route path="message" element={<div>Message Page</div>} />
           <Route path="notification" element={<div>Notification Page</div>} />
-          <Route path="posting" element={<JobPostingForm/>} />
+          <Route path="posting" element={<JobPostingForm />} />
           <Route path="freelancer" element={<div>Freelancer Page</div>} />
           <Route
             path="interview"
@@ -109,6 +108,10 @@ function App() {
           <Route path="proposals" element={<div>Proposals Page</div>} />
           <Route path="dispute" element={<div>Dispute Resolution Page</div>} />
         </Route>
+
+        <Route path="/" element={<HomePage />} />
+        <Route path="/success-login" element={<LoginSuccess />} />
+        <Route path="/market-place" element={<MarketPlace />} />
       </Routes>
     </Router>
   );

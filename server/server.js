@@ -45,6 +45,7 @@ connectDB();
 app.use("/api/auth", (await import("./routes/auth.js")).default)
 app.use("/api/client", (await import("./routes/client.js")).default)
 app.use("/api/freelancer", (await import("./routes/freelancer.js")).default)
+app.use("/api/jobs", (await import("./routes/marketPlace.js")).default)
 
 
 // Server start

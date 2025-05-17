@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Search,
   Filter,
@@ -7,133 +7,99 @@ import {
   Users,
   MessageCircle,
 } from "lucide-react";
+import NavigationBar from "../../components/NavBar/NavigationBar";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllTheJobs } from "../../features/marketPlace/marketPlaceSlice";
 
 function MarketPlace() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
 
-  const jobs = [
-    {
-      id: 1,
-      title: "Freelancer Platform Like Upwork (MERN Stack)",
-      budget: "$2,500 - $5,000",
-      category: "Web Development",
-      time: "1 hour ago",
-      description:
-        "Need a skilled developer to create a freelancing platform similar to Upwork using MERN stack. Must include bidding system, user profiles, and payment integration...",
-      skills: ["node.js", "react.js", "mongodb"],
-      ratings: 4.2,
-      reviews: 5,
-      proposals: 3,
-    },
-    {
-      id: 2,
-      title: "E-commerce Website with Payment Gateway",
-      budget: "$1,800 - $3,500",
-      category: "Web Development",
-      time: "3 hours ago",
-      description:
-        "Looking for an experienced developer to build a responsive e-commerce website with product catalog, shopping cart, and secure payment gateway integration...",
-      skills: ["php", "mysql", "javascript"],
-      ratings: 4.5,
-      reviews: 8,
-      proposals: 7,
-    },
-    {
-      id: 3,
-      title: "Mobile App for Fitness Tracking",
-      budget: "$3,000 - $6,000",
-      category: "Mobile Development",
-      time: "5 hours ago",
-      description:
-        "Need a mobile developer to create a fitness tracking app for iOS and Android. Features include workout plans, progress tracking, calorie counter, and social sharing...",
-      skills: ["react native", "firebase", "UI/UX"],
-      ratings: 4.7,
-      reviews: 12,
-      proposals: 9,
-    },
-  ];
+  const dispatch = useDispatch();
+  const { jobs } = useSelector((store) => store.market);
+
+  useEffect(() => {
+    dispatch(getAllTheJobs()).unwrap();
+  }, [dispatch]);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 500); // 500ms delay
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [searchQuery]);
+
+  // Effect to trigger search when debounced value changes
+  useEffect(() => {
+      dispatch(getAllTheJobs(debouncedSearchQuery));
+    
+  }, [debouncedSearchQuery]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(getAllTheJobs(searchQuery));
+  };
+
+  const [isSkillOpen, setIsSkillOpen] = useState(false);
+  const skills = ["Node.js", "React", "MongoDB", "Express.js"];
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <div className="text-xl font-bold text-green-600">WorkPlace</div>
-              <nav className="ml-10 flex space-x-8">
-                <a
-                  href="#"
-                  className="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-                >
-                  Home
-                </a>
-                <a
-                  href="#"
-                  className="text-green-500 hover:text-green-700 px-3 py-2 text-sm font-medium"
-                >
-                  Market place
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-                >
-                  Find Freelancers/Client
-                </a>
-              </nav>
-            </div>
-            <div>
-              <button className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-full">
-                LogOut
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <NavigationBar />
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Search and Filter */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
-          <div className="w-full md:w-1/2">
-            <div className="relative rounded-md border border-gray-300 flex items-center bg-white">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search size={20} className="text-gray-400" />
-              </div>
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="block w-full pl-10 pr-3 py-2 border-none rounded-md focus:outline-none focus:ring-0 sm:text-sm"
-                placeholder="Search"
-              />
-              <button className="bg-white p-2 rounded-r-md border-l">
-                <Filter size={20} className="text-gray-400" />
-              </button>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between w-full gap-4 px-4 py-6">
+          <div className="relative w-full md:w-[600px]">
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full py-3 pl-10 pr-10 border border-[#27AE60] rounded-full bg-white focus:outline-none"
+            />
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+              <Search size={18} />
             </div>
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-white p-1 rounded-full"
+            >
+              <Search size={20} className="text-gray-500" />
+            </button>
           </div>
 
-          <div className="flex space-x-3">
-            <div className="relative inline-block">
-              <button className="bg-white border border-gray-300 rounded-md px-4 py-2 inline-flex items-center text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
-                Skill
-                <ArrowDown size={16} className="ml-2 text-gray-400" />
+          {/* Filters */}
+          <div className="flex flex-wrap gap-2">
+            <div className="relative">
+              <button
+                onClick={() => setIsSkillOpen(!isSkillOpen)}
+                className="px-4 py-2 border border-green-500 text-green-500 rounded-full hover:bg-green-50 transition-colors"
+              >
+                Skill <span className="ml-1">›</span>
               </button>
+              {isSkillOpen && (
+                <div className="absolute mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg">
+                  {skills.map((skill) => (
+                    <div
+                      key={skill}
+                      className="px-4 py-2 hover:bg-green-50 cursor-pointer text-sm text-gray-700"
+                    >
+                      {skill}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-
-            <div className="relative inline-block">
-              <button className="bg-white border border-gray-300 rounded-md px-4 py-2 inline-flex items-center text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
-                Price Range
-                <ArrowDown size={16} className="ml-2 text-gray-400" />
-              </button>
-            </div>
-
-            <div className="relative inline-block">
-              <button className="bg-white border border-gray-300 rounded-md px-4 py-2 inline-flex items-center text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
-                Job Type
-                <ArrowDown size={16} className="ml-2 text-gray-400" />
-              </button>
-            </div>
+            <button className="px-4 py-2 border border-green-500 text-green-500 rounded-full hover:bg-green-50 transition-colors">
+              Price Range <span className="ml-1">›</span>
+            </button>
+            <button className="px-4 py-2 border border-green-500 text-green-500 rounded-full hover:bg-green-50 transition-colors">
+              Job Type <span className="ml-1">›</span>
+            </button>
           </div>
         </div>
 
@@ -141,7 +107,7 @@ function MarketPlace() {
         <div className="space-y-6">
           {jobs.map((job) => (
             <div
-              key={job.id}
+              key={job._id}
               className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition duration-150"
             >
               <div className="flex flex-col sm:flex-row justify-between">
@@ -150,7 +116,8 @@ function MarketPlace() {
                     {job.title}
                   </h3>
                   <p className="text-sm text-gray-600 mt-1">
-                    {job.budget} · {job.category} · Posted {job.time}
+                    {job.stack} Stack · Posted{" "}
+                    {new Date(job.createdAt).toLocaleString()}
                   </p>
                 </div>
                 <div className="mt-2 sm:mt-0">
@@ -160,7 +127,7 @@ function MarketPlace() {
                 </div>
               </div>
 
-              <p className="mt-3 text-gray-700">{job.description}</p>
+              <p className="mt-3 text-gray-700 truncate">{job.description}</p>
 
               <div className="mt-4 flex flex-wrap gap-2">
                 {job.skills.map((skill, index) => (
@@ -172,8 +139,17 @@ function MarketPlace() {
                   </span>
                 ))}
               </div>
-
               <div className="mt-4 flex items-center justify-between">
+                <div className="flex items-center">
+                  <h3 className="text-lg font-semibold text-gray-700">
+                    ${job.budget}
+                  </h3>
+                </div>
+                <div className="text-sm text-gray-600">
+                  {job.proposals.length} proposals
+                </div>
+              </div>
+              {/* <div className="mt-4 flex items-center justify-between">
                 <div className="flex items-center">
                   <Star
                     size={16}
@@ -187,7 +163,7 @@ function MarketPlace() {
                 <div className="text-sm text-gray-600">
                   {job.proposals} proposals
                 </div>
-              </div>
+              </div> */}
             </div>
           ))}
         </div>
