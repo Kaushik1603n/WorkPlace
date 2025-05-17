@@ -25,25 +25,25 @@ export default function NavigationBar() {
       <div className="flex items-center space-x-8">
         <h1 className="text-xl font-bold">WorkPlace</h1>
         <div className="hidden md:flex space-x-6">
-          <a
-            href="#"
+          <Link
+            to="/"
             className="text-green-600 font-medium hover:text-green-800 transition-colors"
           >
             Home
-          </a>
-          <a
-            href="#"
+          </Link>
+          <Link
+            to="#"
             className="text-gray-700 hover:text-green-600 transition-colors"
           >
             About
-          </a>
+          </Link>
 
-          <a
-            href="#"
+          <Link
+            to="#"
             className="text-gray-700 hover:text-green-600 transition-colors"
           >
             Market place
-          </a>
+          </Link>
 
           {user?.role && (
             <Link
@@ -58,24 +58,24 @@ export default function NavigationBar() {
               to="/freelancer-dashboard"
               className="text-gray-700 hover:text-green-600 transition-colors"
             >
-             freelancer Dashboard
+              freelancer Dashboard
             </Link>
           )}
           {user?.role === "freelancer" && (
-            <a
-              href="#"
+            <Link
+              to="#"
               className="text-gray-700 hover:text-green-600 transition-colors"
             >
               Find Client
-            </a>
+            </Link>
           )}
           {user?.role === "client" && (
-            <a
-              href="#"
+            <Link
+              to="#"
               className="text-gray-700 hover:text-green-600 transition-colors"
             >
               Find Freelancers
-            </a>
+            </Link>
           )}
         </div>
       </div>
@@ -116,49 +116,49 @@ export default function NavigationBar() {
       {isMenuOpen && (
         <div className="absolute top-full left-0 right-0 bg-white p-5 md:hidden z-50 shadow-lg border-t border-gray-100">
           <div className="flex flex-col space-y-4">
-            <a
-              href="#"
+            <Link
+              to="/"
               className="text-green-600 font-medium hover:text-green-800 transition-colors"
             >
               Home
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="#"
               className="text-gray-700 hover:text-green-600 transition-colors"
             >
               About
-            </a>
+            </Link>
 
-            <a
-              href="#"
+            <Link
+              to="#"
               className="text-gray-700 hover:text-green-600 transition-colors"
             >
               Market place
-            </a>
+            </Link>
 
             {user?.role && (
-              <a
-                href="#"
+              <Link
+                to="#"
                 className="text-gray-700 hover:text-green-600 transition-colors"
               >
                 Dashboard
-              </a>
+              </Link>
             )}
             {user?.role === "freelancer" && (
-              <a
-                href="#"
+              <Link
+                to="#"
                 className="text-gray-700 hover:text-green-600 transition-colors"
               >
                 Find Client
-              </a>
+              </Link>
             )}
             {user?.role === "client" && (
-              <a
-                href="#"
+              <Link
+                to="#"
                 className="text-gray-700 hover:text-green-600 transition-colors"
               >
                 Find Freelancers
-              </a>
+              </Link>
             )}
             <div className="flex flex-col space-y-3 pt-3">
               {!isAuthenticated ? (

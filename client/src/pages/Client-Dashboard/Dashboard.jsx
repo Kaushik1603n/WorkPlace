@@ -1,48 +1,16 @@
-import {} from "react";
-import {
-  Menu,
-  ChevronRight,
-  Bell,
-  MessageSquare,
-  User,
-  FileText,
-  Briefcase,
-  Calendar,
-  Shield,
-} from "lucide-react";
-import NavigationBar from "../../components/NavBar/NavigationBar";
-import Sidebar from "../../components/Client/SideBar";
+import { useEffect } from "react";
+import { Menu } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { getClientProject } from "../../features/project/projectSlice";
+// import { toast } from "react-toastify";
 
 export default function ClientDashboard() {
-  const activeProjects = [
-    {
-      id: 1,
-      title: "Food Delivery web app",
-      description: "Food Delivery app full functionality",
-      cost: "100000/-",
-      stack: "MERN Stack",
-      developer: "John",
-      role: "MERN stack developer",
-    },
-    {
-      id: 2,
-      title: "Food Delivery web app",
-      description: "Food Delivery app full functionality",
-      cost: "100000/-",
-      stack: "MERN Stack",
-      developer: "John",
-      role: "MERN stack developer",
-    },
-    {
-      id: 3,
-      title: "Food Delivery web app",
-      description: "Food Delivery app full functionality",
-      cost: "100000/-",
-      stack: "MERN Stack",
-      developer: "John",
-      role: "MERN stack developer",
-    },
-  ];
+  const dispatch = useDispatch();
+  const { project } = useSelector((state) => state.clientProject);
+
+  useEffect(() => {    
+    dispatch(getClientProject()).unwrap();
+  }, [dispatch]);
 
 
   return (
@@ -75,9 +43,9 @@ export default function ClientDashboard() {
             Active Project
           </h3>
           <div className="space-y-4">
-            {activeProjects.map((project) => (
+            {project && project.map((project) => (
               <div
-                key={project.id}
+                key={project._id}
                 className="border border-color bg-white rounded-lg p-4"
               >
                 <div className="flex justify-between items-start">
@@ -115,7 +83,7 @@ export default function ClientDashboard() {
                       </div>
                     </div>
                   </div>
-                  <div className="text-lg font-medium">{project.cost}</div>
+                  <div className="text-lg font-medium">{project.budget}</div>
                 </div>
               </div>
             ))}

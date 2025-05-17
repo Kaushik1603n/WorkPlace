@@ -13,8 +13,19 @@ export const createNewJob = createAsyncThunk(
     }
   }
 );
+export const getClientProject = createAsyncThunk(
+  "client/get-project",
+  async (credentials, { rejectWithValue }) => {
+    try {      
+      const response = await createProjectApi.getProject();
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 const initialState = {
-  project: null,
+  project: [],
   loading: false,
   error: null,
 };
@@ -39,6 +50,22 @@ const clientProject = createSlice({
         state.error = null;
       })
       .addCase(createNewJob.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.error ;
+      })
+
+      .addCase(getClientProject.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getClientProject.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload.projects);
+        
+        state.project = action.payload.projects;
+        state.error = null;
+      })
+      .addCase(getClientProject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.error ;
       })
