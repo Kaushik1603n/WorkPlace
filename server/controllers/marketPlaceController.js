@@ -48,3 +48,30 @@ export const getAllJobs = async (req, res) => {
     });
   }
 };
+export const getJobDetails = async (req, res) => {
+  try {
+    const jobId = req.params.jobId;
+
+    const jobDetails = await ProjectModule.findById(jobId)
+      .populate({
+        path: "clientId",
+      })
+      .lean();
+
+    if (!jobDetails) {
+      return res.status(404).json({ success: false, error: "Job not found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Job details get successfully",
+      jobDetails,
+    });
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Server error",
+    });
+  }
+};

@@ -29,6 +29,7 @@ import FreelancerProfile from "./pages/Freelancer-Dashboard/profile/FreelancerPr
 import FreelancerProfileEdit from "./pages/Freelancer-Dashboard/profile/FreelancerProfileEdit";
 import JobPostingForm from "./pages/Client-Dashboard/JobProsting/JobPostingForm";
 import MarketPlace from "./pages/MarketPlace/MarketPlace";
+import JobDetails from "./pages/MarketPlace/JobDetails";
 
 function App() {
   const dispatch = useDispatch();
@@ -111,7 +112,8 @@ function App() {
 
         <Route path="/" element={<HomePage />} />
         <Route path="/success-login" element={<LoginSuccess />} />
-        <Route path="/market-place" element={<MarketPlace />} />
+        <Route path="/market-place" element={<MarketPlace />}></Route>
+        <Route path="/market-place/job-details/:jobId" element={<JobDetails />} />
       </Routes>
     </Router>
   );

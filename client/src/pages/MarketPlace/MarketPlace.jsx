@@ -10,6 +10,7 @@ import {
 import NavigationBar from "../../components/NavBar/NavigationBar";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllTheJobs } from "../../features/marketPlace/marketPlaceSlice";
+import { Link } from "react-router-dom";
 
 function MarketPlace() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,8 +35,7 @@ function MarketPlace() {
 
   // Effect to trigger search when debounced value changes
   useEffect(() => {
-      dispatch(getAllTheJobs(debouncedSearchQuery));
-    
+    dispatch(getAllTheJobs(debouncedSearchQuery));
   }, [debouncedSearchQuery]);
 
   const handleSubmit = (e) => {
@@ -121,9 +121,12 @@ function MarketPlace() {
                   </p>
                 </div>
                 <div className="mt-2 sm:mt-0">
-                  <button className="bg-green-100 text-green-600 hover:bg-green-200 px-4 py-2 rounded-md text-sm font-medium">
+                  <Link
+                    to={`job-details/${job._id}`}
+                    className="bg-green-100 text-green-600 hover:bg-green-200 px-4 py-2 rounded-md text-sm font-medium"
+                  >
                     View Job
-                  </button>
+                  </Link>
                 </div>
               </div>
 
@@ -254,6 +257,7 @@ function MarketPlace() {
           </nav>
         </div>
       </main>
+      
     </div>
   );
 }
