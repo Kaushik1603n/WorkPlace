@@ -203,7 +203,7 @@ function FreelancerProfile() {
               <div className="mt-6 border border-color rounded-md p-4 w-full">
                 <h3 className="text-lg font-semibold mb-3">Skills</h3>
                 <div className="flex flex-wrap gap-2 max-h-35 overflow-y-auto p-1">
-                  {freelancer.skills.map((skill, index) => (
+                  {freelancer?.skills.map((skill, index) => (
                     <div
                       key={index}
                       className="px-3 py-2 border border-color rounded-md bg-emerald-50 text-emerald-800 inline-block"

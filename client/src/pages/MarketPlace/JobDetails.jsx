@@ -88,7 +88,7 @@ function JobDetails() {
 
         <div className="flex justify-end mt-6">
           {user?.role === "client" && (
-            <Link className="bg-[#2ECC71] hover:bg-[#27AE60] text-white py-2 px-6 rounded-lg transition-colors">
+            <Link to="apply-job" className="bg-[#2ECC71] hover:bg-[#27AE60] text-white py-2 px-6 rounded-lg transition-colors">
               Apply Now
             </Link>
           )}
