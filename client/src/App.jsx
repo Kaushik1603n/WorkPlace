@@ -31,6 +31,8 @@ import JobPostingForm from "./pages/Client-Dashboard/JobProsting/JobPostingForm"
 import MarketPlace from "./pages/MarketPlace/MarketPlace";
 import JobDetails from "./pages/MarketPlace/JobDetails";
 import ApplyJob from "./pages/MarketPlace/ApplyJob";
+import ClientJobDetails from "./pages/Client-Dashboard/JobProsting/ClientJobDetails";
+import AllProposals from "./pages/Client-Dashboard/proposals/AllProposals";
 
 function App() {
   const dispatch = useDispatch();
@@ -80,6 +82,8 @@ function App() {
 
         <Route path="/client-dashboard" element={<ClientLayout />}>
           <Route index element={<ClientDashboard />} />
+          <Route path="job-details/:jobId" element={<ClientJobDetails/>} />
+          <Route path="job-details/:jobId/all-proposal" element={<AllProposals/>} />
           <Route path="payments" element={<div>Payment Page</div>} />
           <Route path="profile" element={<ClientProfile />} />
           <Route path="profile/edit" element={<ClientProfileEdit />} />

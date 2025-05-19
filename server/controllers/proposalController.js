@@ -47,3 +47,41 @@ export const submitProposal = async (req, res) => {
       .json({ success: false, message: "Internal Server Error" });
   }
 };
+export const getAllProposal = async (req, res) => {
+  try {
+    const jobId = req.params.jobId;
+
+    const allProposal = await Proposal.find({ jobId })
+      .populate({
+        path: "freelancerId",
+        select: "fullName email"
+      })
+      .populate({
+        path: "jobId",
+         select: "title stack"
+      })
+      .lean();
+
+    const formattedProposals = allProposal.map((proposal) => ({
+      freelancer_id:proposal._id,
+      freelancerName: proposal.freelancerId?.fullName,
+      freelancerEmail: proposal.freelancerId?.email,
+      jobTitle: proposal.jobId?.title,
+      status: proposal.status,
+      bidAmount: proposal.bidAmount,
+      submittedAt: new Date(proposal.createdAt).toLocaleString(),
+    }));
+
+    console.log(formattedProposals);
+    return res.status(201).json({
+      success: true,
+      message: "Proposal get successfully",
+      allProposal: formattedProposals || [],
+    });
+  } catch (error) {
+    console.error("Proposal submit error:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
