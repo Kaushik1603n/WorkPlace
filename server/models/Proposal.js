@@ -12,6 +12,7 @@ const ProposalSchema = new mongoose.Schema(
     budgetType: { type: String, enum: ["fixed", "hourly"], required: true },
     bidAmount: { type: Number, required: true },
     estimatedTime: { type: Number },
+    workSamples: { type: String },
     PortfolioAttachments: [{ type: String }],
     milestones: [
       {
@@ -23,7 +24,7 @@ const ProposalSchema = new mongoose.Schema(
     ],
     status: {
       type: String,
-      enum: ["submitted", "interviewing", "rejected", "accepted"],
+      enum: ["submitted", "interviewing", "rejected", "accepted","cansel"],
       default: "submitted",
     },
   },

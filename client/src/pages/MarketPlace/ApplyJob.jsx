@@ -4,14 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { getFreelancerProfile } from "../../features/freelancerProfile/freelancerProfileSlice";
 import cover from "../../assets/cover.png";
 import avatar from "../../assets/p1.jpg";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Upload } from "lucide-react";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 function ApplyJob() {
   const dispatch = useDispatch();
   const { freelancer } = useSelector((state) => state.freelancer);
   const { user } = useSelector((state) => state.auth);
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
+  const { jobId } = useParams();
 
   useEffect(() => {
     dispatch(getFreelancerProfile())
@@ -38,7 +41,6 @@ function ApplyJob() {
   });
   const [agreeVideoCall, setAgreeVideoCall] = useState(false);
   const [agreeNDA, setAgreeNDA] = useState(false);
-  const [errors, setErrors] = useState({});
   const [milestoneErrors, setMilestoneErrors] = useState({});
 
   const handleChange = (e) => {
@@ -116,40 +118,40 @@ function ApplyJob() {
 
     if (!formValues.coverLetter.trim()) {
       toast.error("Cover letter is required");
-      newErrors = false
+      newErrors = false;
     }
 
     if (!formValues.bidAmount.trim()) {
       toast.error("Bid amount is required");
-      newErrors = false
+      newErrors = false;
     } else if (isNaN(parseFloat(formValues.bidAmount))) {
       toast.error("Bid amount must be a valid number");
-      newErrors = false
+      newErrors = false;
     }
 
     if (!formValues.timeline.trim()) {
       toast.error("Timeline is required");
-      newErrors = false
+      newErrors = false;
     }
 
     if (!formValues.workSamples.trim()) {
       toast.error("Work samples link is required");
-      newErrors = false
+      newErrors = false;
     }
 
     if (!agreeVideoCall) {
       toast.error("You must agree to a video call interview if selected");
-      newErrors = false
+      newErrors = false;
     }
 
     if (!agreeNDA) {
       toast.error("You must agree to the Non-Disclosure Agreement terms");
-      newErrors = false
+      newErrors = false;
     }
 
     if (milestones.length === 0) {
       toast.error("At least one milestone is required");
-      newErrors = false
+      newErrors = false;
     }
 
     return newErrors;
@@ -159,14 +161,51 @@ function ApplyJob() {
     e.preventDefault();
 
     if (validateForm()) {
-      // Form submission logic would go here
       console.log("Form submitted successfully", {
         ...formValues,
         milestones,
         bidType,
         agreeVideoCall,
-        agreeNDA
+        agreeNDA,
       });
+
+      axios
+        .post(
+          `${baseURL}/jobs/new-proposal`,
+          {
+            ...formValues,
+            milestones,
+            bidType,
+            agreeVideoCall,
+            agreeNDA,
+            jobId,
+          },
+          {
+            withCredentials: true, // 👈 This sends cookies (e.g., session/auth)
+          }
+        )
+        .then((response) => {
+          console.log("Proposal submitted:", response.data);
+          toast.success(response.data.message);
+          setMilestones({
+            title: "",
+            description: "",
+            dueDate: "",
+            amount: "",
+          });
+          setFormValues({
+            coverLetter: "",
+            bidAmount: "",
+            timeline: "",
+            workSamples: "",
+          });
+          setAgreeNDA(false)
+          setAgreeVideoCall(false)
+        })
+        .catch((error) => {
+          console.error("Error submitting proposal:", error);
+          toast.error("Error");
+        });
     } else {
       console.log("Form validation failed");
     }
