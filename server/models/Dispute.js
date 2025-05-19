@@ -2,18 +2,23 @@ import mongoose from "mongoose";
 
 const DisputeSchema = new mongoose.Schema(
   {
+    jobId: { type: mongoose.Schema.Types.ObjectId, ref: "Job", required: true },
     contractId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Contract",
       required: true,
     },
-    milestoneId: { type: mongoose.Schema.Types.ObjectId, ref: "Milestone" },
-    initiatorId: {
+    escrowId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Escrow",
+      required: true,
+    },
+    raisedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    againstId: {
+    against: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -22,16 +27,28 @@ const DisputeSchema = new mongoose.Schema(
     description: { type: String, required: true },
     status: {
       type: String,
-      enum: ["open", "under-review", "resolved", "escalated"],
-      default: "open",
+      enum: ["raised", "under-review", "resolved", "cancelled"],
+      default: "raised",
     },
     resolution: { type: String },
+    resolutionDate: { type: String },
     adminId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    evidence: [
+    attachments: [
       {
         url: String,
         type: String,
         description: String,
+      },
+    ],
+    messages: [
+      {
+        sender: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+        message: { type: String, required: true },
+        timestamp: { type: Date, default: Date.now },
       },
     ],
   },

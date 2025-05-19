@@ -29,6 +29,11 @@ const ContractSchema = new mongoose.Schema(
       default: "active",
     },
     paymentMethod: { type: String },
+    status: {
+      type: String,
+      enum: ["active", "completed", "terminated"],
+      default: "active",
+    },
     terms: { type: String },
   },
   { timestamps: true }

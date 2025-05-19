@@ -7,13 +7,18 @@ const PaymentSchema = new mongoose.Schema(
       ref: "Contract",
       required: true,
     },
-    milestoneId: { type: mongoose.Schema.Types.ObjectId, ref: "Milestone" },
-    payerId: {
+    jobId: { type: mongoose.Schema.Types.ObjectId, ref: "Job", required: true },
+    proposalId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Proposal",
+      required: true,
+    },
+    clientId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    receiverId: {
+    freelancerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -27,6 +32,8 @@ const PaymentSchema = new mongoose.Schema(
       enum: ["pending", "processing", "completed", "failed", "refunded"],
       default: "pending",
     },
+    milestoneId: { type: String }, // If payment is for a specific milestone
+
     escrowReleaseDate: { type: Date },
     payoutDate: { type: Date },
   },

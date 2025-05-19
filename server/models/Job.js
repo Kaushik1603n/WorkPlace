@@ -12,7 +12,7 @@ const JobSchema = new mongoose.Schema(
     requiredFeatures: { type: String },
     stack: { type: String },
     skills: {
-      type: [String], 
+      type: [String],
       default: [],
     },
     budgetType: { type: String, enum: ["fixed", "hourly"], required: true },
@@ -37,6 +37,12 @@ const JobSchema = new mongoose.Schema(
     },
     reference: { type: String },
     Attachments: [{ type: String }],
+    contractId: { type: mongoose.Schema.Types.ObjectId, ref: "Contract" },
+    paymentStatus: {
+      type: String,
+      enum: ["unpaid", "partially-paid", "fully-paid"],
+      default: "unpaid",
+    },
   },
   { timestamps: true }
 );

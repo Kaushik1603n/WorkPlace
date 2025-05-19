@@ -20,13 +20,29 @@ const ProposalSchema = new mongoose.Schema(
         description: String,
         amount: Number,
         dueDate: Date,
+        status: {
+          type: String,
+          enum: ["pending", "approved", "completed", "paid"],
+          default: "pending",
+        },
+        paymentId: String,
       },
     ],
     status: {
       type: String,
-      enum: ["submitted", "interviewing", "rejected", "accepted", "cansel"],
+      enum: [
+        "submitted",
+        "interviewing",
+        "rejected",
+        "accepted",
+        "cancelled",
+        "active",
+        "completed",
+      ],
       default: "submitted",
     },
+    contractId: { type: mongoose.Schema.Types.ObjectId, ref: "Contract" },
+    payments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Payment" }],
   },
   { timestamps: true }
 );
