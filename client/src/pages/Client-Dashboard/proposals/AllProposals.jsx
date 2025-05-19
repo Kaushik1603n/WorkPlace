@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Search, Filter, Clock, CheckCircle, AlertCircle, DollarSign } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 // import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -37,7 +37,7 @@ function AllProposals() {
       <div className="space-y-4">
         {proposals.map((proposal) => (
           <div
-            key={proposal?.freelancer_id}
+            key={proposal?.proposal_id}
             className={`flex items-center justify-between p-4 rounded-lg border  "border-green-200 bg-green-50
                 border-gray-200 bg-white"
             `}
@@ -81,9 +81,9 @@ function AllProposals() {
             </div>
 
             <div>
-              <button className="px-4 py-2 rounded-md bg-green-500 text-white font-medium hover:bg-green-600 transition-colors">
+              <Link to={`propisal-details/${proposal?.proposal_id}`} className="px-4 py-2 rounded-md bg-green-500 text-white font-medium hover:bg-green-600 transition-colors">
                 Review
-              </button>
+              </Link>
             </div>
           </div>
         ))}

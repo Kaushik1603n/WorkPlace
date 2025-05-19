@@ -1,3 +1,4 @@
+import FreelancerProfile from "../models/FreelancerProfile.js";
 import Proposal from "../models/Proposal.js";
 
 export const submitProposal = async (req, res) => {
@@ -14,7 +15,6 @@ export const submitProposal = async (req, res) => {
       jobId,
     } = req.body;
 
-    console.log(req.body);
 
     const { userId } = req.user;
     if (!coverLetter || !bidType || !bidAmount) {
@@ -54,16 +54,16 @@ export const getAllProposal = async (req, res) => {
     const allProposal = await Proposal.find({ jobId })
       .populate({
         path: "freelancerId",
-        select: "fullName email"
+        select: "fullName email",
       })
       .populate({
         path: "jobId",
-         select: "title stack"
+        select: "title stack",
       })
       .lean();
 
     const formattedProposals = allProposal.map((proposal) => ({
-      freelancer_id:proposal._id,
+      proposal_id: proposal._id,
       freelancerName: proposal.freelancerId?.fullName,
       freelancerEmail: proposal.freelancerId?.email,
       jobTitle: proposal.jobId?.title,
@@ -72,11 +72,74 @@ export const getAllProposal = async (req, res) => {
       submittedAt: new Date(proposal.createdAt).toLocaleString(),
     }));
 
-    console.log(formattedProposals);
     return res.status(201).json({
       success: true,
       message: "Proposal get successfully",
       allProposal: formattedProposals || [],
+    });
+  } catch (error) {
+    console.error("Proposal submit error:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+export const getProposalDetails = async (req, res) => {
+  try {
+    const proposalId = req.params.proposalId;
+    const { userId } = req.user;
+
+    if (!proposalId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Proposal ID is required" });
+    }
+
+    const proposalDetails = await Proposal.findById(proposalId)
+      .populate({
+        path: "freelancerId",
+        select: "-password -refreshToken",
+      })
+      .populate({
+        path: "jobId",
+      })
+      .lean();
+
+    if (!proposalDetails) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Proposal not found" });
+    }
+
+    if (proposalDetails?.jobId?.clientId?.toString() !== userId) {
+      return res
+        .status(403)
+        .json({ success: false, message: "You Can not access this page" });
+    }
+
+    const freelancerDetails= await FreelancerProfile.findOne({userId:proposalDetails.freelancerId._id})
+    
+    
+    const proposal = {
+      proposal_id: proposalDetails._id,
+      status: proposalDetails.status,
+      timeline: proposalDetails.estimatedTime,
+      bidAmount: proposalDetails.bidAmount,
+      bidType: proposalDetails.budgetType,
+      coverLetter: proposalDetails.coverLetter,
+      milestones: proposalDetails.milestones || [],
+      freelancerName: proposalDetails.freelancerId?.fullName,
+      freelancerEmail: proposalDetails.freelancerId?.email,
+      jobTitle: proposalDetails.jobId?.title,
+      submittedAt: new Date(proposalDetails.createdAt).toLocaleString(),
+      profile: freelancerDetails?.profilePic || "",
+      skills: freelancerDetails?.skills || [],
+    };
+
+    return res.status(200).json({
+      success: true,
+      message: "Proposal details get successfully",
+      data: proposal,
     });
   } catch (error) {
     console.error("Proposal submit error:", error);
