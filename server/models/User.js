@@ -32,14 +32,14 @@ const UserSchema = new mongoose.Schema(
 );
 
 UserSchema.virtual("jobs", {
-  ref: "Job",               // 👈 The model to use
-  localField: "_id",        // 👈 The User field (primary key)
-  foreignField: "clientId", // 👈 The Job field that references User
+  ref: "Job",               
+  localField: "_id",        
+  foreignField: "clientId", 
 });
 UserSchema.virtual("profile", {
-  ref: "FreelancerProfile",               // 👈 The model to use
-  localField: "_id",        // 👈 The User field (primary key)
-  foreignField: "userId", // 👈 The Job field that references User
+  ref: "FreelancerProfile",               
+  localField: "_id",        
+  foreignField: "userId",
 });
 UserSchema.set("toObject", { virtuals: true });
 UserSchema.set("toJSON", { virtuals: true });

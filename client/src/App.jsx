@@ -34,6 +34,7 @@ import ApplyJob from "./pages/MarketPlace/ApplyJob";
 import ClientJobDetails from "./pages/Client-Dashboard/JobProsting/ClientJobDetails";
 import AllProposals from "./pages/Client-Dashboard/proposals/AllProposals";
 import ProposalDetails from "./pages/Client-Dashboard/proposals/ProposalDetails";
+import FreelancerBit from "./pages/Freelancer-Dashboard/Proposal-Bid/FreelancerBit";
 
 function App() {
   const dispatch = useDispatch();
@@ -113,7 +114,7 @@ function App() {
             path="interview"
             element={<div>Interview Scheduling Page</div>}
           />
-          <Route path="proposals" element={<div>Proposals Page</div>} />
+          <Route path="proposals" element={<FreelancerBit/>} />
           <Route path="dispute" element={<div>Dispute Resolution Page</div>} />
         </Route>
 

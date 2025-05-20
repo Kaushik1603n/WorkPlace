@@ -20,7 +20,7 @@ const ContractSchema = new mongoose.Schema(
     jobId: { type: mongoose.Schema.Types.ObjectId, ref: "Job", required: true },
     title: { type: String, required: true },
     description: { type: String },
-    startDate: { type: Date, required: true },
+    startDate: { type: Date },
     endDate: { type: Date },
     totalAmount: { type: Number, required: true },
     status: {
@@ -34,7 +34,7 @@ const ContractSchema = new mongoose.Schema(
       enum: ["active", "completed", "terminated"],
       default: "active",
     },
-    terms: { type: String },
+    terms: [ String ],
   },
   { timestamps: true }
 );
