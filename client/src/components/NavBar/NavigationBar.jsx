@@ -45,7 +45,7 @@ export default function NavigationBar() {
             Market place
           </Link>
 
-          {user?.role && (
+          {user?.role === "client" && (
             <Link
               to="/client-dashboard"
               className="text-gray-700 hover:text-green-600 transition-colors"
@@ -53,12 +53,12 @@ export default function NavigationBar() {
               Dashboard
             </Link>
           )}
-          {user?.role && (
+          {user?.role === "freelancer" && (
             <Link
               to="/freelancer-dashboard"
               className="text-gray-700 hover:text-green-600 transition-colors"
             >
-              freelancer Dashboard
+              Dashboard
             </Link>
           )}
           {user?.role === "freelancer" && (
@@ -136,9 +136,17 @@ export default function NavigationBar() {
               Market place
             </Link>
 
-            {user?.role && (
+            {user?.role === "client" && (
               <Link
-                to="#"
+                to="/client-dashboard"
+                className="text-gray-700 hover:text-green-600 transition-colors"
+              >
+                Dashboard
+              </Link>
+            )}
+            {user?.role === "freelancer" && (
+              <Link
+                to="/freelancer-dashboard"
                 className="text-gray-700 hover:text-green-600 transition-colors"
               >
                 Dashboard

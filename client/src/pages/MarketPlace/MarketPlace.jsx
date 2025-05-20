@@ -26,14 +26,13 @@ function MarketPlace() {
   useEffect(() => {
     const timerId = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery);
-    }, 500); // 500ms delay
+    }, 500); 
 
     return () => {
       clearTimeout(timerId);
     };
   }, [searchQuery]);
 
-  // Effect to trigger search when debounced value changes
   useEffect(() => {
     dispatch(getAllTheJobs(debouncedSearchQuery));
   }, [debouncedSearchQuery]);
@@ -72,7 +71,6 @@ function MarketPlace() {
             </button>
           </div>
 
-          {/* Filters */}
           <div className="flex flex-wrap gap-2">
             <div className="relative">
               <button
@@ -103,7 +101,6 @@ function MarketPlace() {
           </div>
         </div>
 
-        {/* Job Listings */}
         <div className="space-y-6">
           {jobs.map((job) => (
             <div
@@ -171,7 +168,6 @@ function MarketPlace() {
           ))}
         </div>
 
-        {/* Pagination */}
         <div className="flex justify-center mt-8">
           <nav
             className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"

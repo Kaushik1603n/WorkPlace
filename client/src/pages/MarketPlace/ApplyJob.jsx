@@ -181,7 +181,7 @@ function ApplyJob() {
             jobId,
           },
           {
-            withCredentials: true, // 👈 This sends cookies (e.g., session/auth)
+            withCredentials: true, 
           }
         )
         .then((response) => {

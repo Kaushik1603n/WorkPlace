@@ -242,7 +242,6 @@ function ProposalDetails() {
               </div>
             </div>
 
-            {/* Trust & Verification */}
             <div className="mb-6">
               <h2 className="text-lg font-semibold mb-4 pb-2 border-b border-[#27AE60]">
                 Trust & Verification
@@ -272,7 +271,6 @@ function ProposalDetails() {
               </div>
             </div>
 
-            {/* Client Notes */}
           </div>
         </div>
       </div>

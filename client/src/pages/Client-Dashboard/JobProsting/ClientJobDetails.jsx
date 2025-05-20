@@ -7,7 +7,7 @@ function ClientJobDetails() {
   const { jobId } = useParams();
   const [job, setJob] = useState(null);
 
-//   const { user } = useSelector((store) => store.auth);
+  //   const { user } = useSelector((store) => store.auth);
 
   const baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -23,7 +23,6 @@ function ClientJobDetails() {
         <h1 className="text-2xl font-bold text-center mb-8">{job?.title}</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Left Column */}
           <div>
             <div className="mb-8">
               <h2 className="text-lg font-semibold mb-2">Discription</h2>
@@ -51,7 +50,6 @@ function ClientJobDetails() {
             </div>
           </div>
 
-          {/* Right Column */}
           <div>
             <div className="mb-8">
               <h2 className="text-lg font-semibold mb-2">
@@ -86,12 +84,12 @@ function ClientJobDetails() {
 
         <div className="flex justify-end mt-6">
           {/* {user?.role === "freelancer" && ( */}
-            <Link
-              to="all-proposal"
-              className="bg-[#2ECC71] hover:bg-[#27AE60] text-white py-2 px-6 rounded-lg transition-colors"
-            >
-              All Proposals
-            </Link>
+          <Link
+            to="all-proposal"
+            className="bg-[#2ECC71] hover:bg-[#27AE60] text-white py-2 px-6 rounded-lg transition-colors"
+          >
+            All Proposals
+          </Link>
           {/* )} */}
         </div>
       </div>

@@ -61,7 +61,6 @@ export default function ClientProfile() {
 
   return (
     <div className="container mx-auto px-4 pb-8 ">
-      {/* Banner and Profile Image */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8 border border-color">
         <div className="relative">
           <div className="w-full aspect-[5.5/1] overflow-hidden bg-amber-50">
@@ -72,7 +71,6 @@ export default function ClientProfile() {
             />
           </div>
 
-          {/* Profile Image on Banner */}
           <div className="absolute left-4 bottom-0 transform translate-y-1/2">
             <div className="h-30 w-30 rounded-full bg-white p-1 shadow-md">
               <img
@@ -84,10 +82,8 @@ export default function ClientProfile() {
           </div>
         </div>
 
-        {/* Content Area with Padding for Profile Image */}
         <div className="pt-16 pb-4 px-4">
           <div className="flex flex-col md:flex-row gap-8">
-            {/* Profile Info Section */}
             <div className="w-full md:w-1/3">
               <h2 className="text-xl font-semibold text-gray-800">
                 {user?.fullName}
@@ -159,8 +155,7 @@ export default function ClientProfile() {
                 </div>
               </div>
 
-              {/* Social Links */}
-              <div className="mt-4 flex space-x-4">
+              {/* <div className="mt-4 flex space-x-4">
                 <a href="#" className="text-gray-800">
                   <svg
                     className="h-5 w-5"
@@ -188,9 +183,8 @@ export default function ClientProfile() {
                     <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
                   </svg>
                 </a>
-              </div>
+              </div> */}
 
-              {/* Action Buttons */}
               <div className="mt-6">
                 <button className="w-full bg-[#2ECC71] hover:bg-[#27AE60] text-white py-2 px-4 rounded-md font-medium">
                   Create new Job
@@ -205,9 +199,7 @@ export default function ClientProfile() {
               </div>
             </div>
 
-            {/* Projects Stats and Recent Projects Section */}
             <div className="w-full md:w-2/3">
-              {/* Project Stats */}
               <div className="grid grid-cols-2 gap-4 mb-6 ">
                 <div className=" p-4 rounded-md text-center shadow-sm bg-color-light border border-color">
                   <h3 className="text-green-800 font-medium">
@@ -227,7 +219,6 @@ export default function ClientProfile() {
                 </div>
               </div>
 
-              {/* Recent Projects */}
               <div className="mt-6">
                 <h3 className="text-lg font-medium mb-4">Recent Projects</h3>
 

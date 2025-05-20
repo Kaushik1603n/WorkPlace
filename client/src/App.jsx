@@ -35,6 +35,8 @@ import ClientJobDetails from "./pages/Client-Dashboard/JobProsting/ClientJobDeta
 import AllProposals from "./pages/Client-Dashboard/proposals/AllProposals";
 import ProposalDetails from "./pages/Client-Dashboard/proposals/ProposalDetails";
 import FreelancerBit from "./pages/Freelancer-Dashboard/Proposal-Bid/FreelancerBit";
+import ProtectedClientRoute from "./utils/ProtectedClientRoute";
+import ProtectedFreelancerRoute from "./utils/ProtectedFreelancerRoute";
 
 function App() {
   const dispatch = useDispatch();
@@ -82,47 +84,70 @@ function App() {
           <Route path="/home" element={<HomePage />} />
         </Route>
 
-        <Route path="/client-dashboard" element={<ClientLayout />}>
-          <Route index element={<ClientDashboard />} />
-          <Route path="job-details/:jobId" element={<ClientJobDetails/>} />
-          <Route path="job-details/:jobId/all-proposal" element={<AllProposals/>} />
-          <Route path="job-details/:jobId/all-proposal/propisal-details/:proposalId" element={<ProposalDetails/>} />
-          <Route path="payments" element={<div>Payment Page</div>} />
-          <Route path="profile" element={<ClientProfile />} />
-          <Route path="profile/edit" element={<ClientProfileEdit />} />
-          <Route path="message" element={<div>Message Page</div>} />
-          <Route path="notification" element={<div>Notification Page</div>} />
-          <Route path="posting" element={<JobPostingForm />} />
-          <Route path="freelancer" element={<div>Freelancer Page</div>} />
-          <Route
-            path="interview"
-            element={<div>Interview Scheduling Page</div>}
-          />
-          <Route path="dispute" element={<div>Dispute Resolution Page</div>} />
+        <Route element={<ProtectedClientRoute />}>
+          <Route path="/client-dashboard" element={<ClientLayout />}>
+            <Route index element={<ClientDashboard />} />
+            <Route path="job-details/:jobId" element={<ClientJobDetails />} />
+            <Route
+              path="job-details/:jobId/all-proposal"
+              element={<AllProposals />}
+            />
+            <Route
+              path="job-details/:jobId/all-proposal/propisal-details/:proposalId"
+              element={<ProposalDetails />}
+            />
+            <Route path="payments" element={<div>Payment Page</div>} />
+            <Route path="profile" element={<ClientProfile />} />
+            <Route path="profile/edit" element={<ClientProfileEdit />} />
+            <Route path="message" element={<div>Message Page</div>} />
+            <Route path="notification" element={<div>Notification Page</div>} />
+            <Route path="posting" element={<JobPostingForm />} />
+            <Route path="freelancer" element={<div>Freelancer Page</div>} />
+            <Route
+              path="interview"
+              element={<div>Interview Scheduling Page</div>}
+            />
+            <Route
+              path="dispute"
+              element={<div>Dispute Resolution Page</div>}
+            />
+          </Route>
         </Route>
 
-        <Route path="/freelancer-dashboard" element={<FreelancerLayout />}>
-          <Route index element={<FreelancerDashboard />} />
-          <Route path="payments" element={<div>Payment Page</div>} />
-          <Route path="profile" element={<FreelancerProfile />} />
-          <Route path="profile/edit" element={<FreelancerProfileEdit />} />
-          <Route path="message" element={<div>Message Page</div>} />
-          <Route path="notification" element={<div>Notification Page</div>} />
-          <Route path="calender" element={<div>Calender page</div>} />
-          <Route path="client" element={<div>Client Page</div>} />
-          <Route
-            path="interview"
-            element={<div>Interview Scheduling Page</div>}
-          />
-          <Route path="proposals" element={<FreelancerBit/>} />
-          <Route path="dispute" element={<div>Dispute Resolution Page</div>} />
+        <Route element={ProtectedFreelancerRoute}>
+          <Route path="/freelancer-dashboard" element={<FreelancerLayout />}>
+            <Route index element={<FreelancerDashboard />} />
+            <Route path="payments" element={<div>Payment Page</div>} />
+            <Route path="profile" element={<FreelancerProfile />} />
+            <Route path="profile/edit" element={<FreelancerProfileEdit />} />
+            <Route path="message" element={<div>Message Page</div>} />
+            <Route path="notification" element={<div>Notification Page</div>} />
+            <Route path="calender" element={<div>Calender page</div>} />
+            <Route path="client" element={<div>Client Page</div>} />
+            <Route
+              path="interview"
+              element={<div>Interview Scheduling Page</div>}
+            />
+            <Route path="proposals" element={<FreelancerBit />} />
+            <Route
+              path="dispute"
+              element={<div>Dispute Resolution Page</div>}
+            />
+          </Route>
         </Route>
 
         <Route path="/" element={<HomePage />} />
         <Route path="/success-login" element={<LoginSuccess />} />
         <Route path="/market-place" element={<MarketPlace />}></Route>
-        <Route path="/market-place/job-details/:jobId" element={<JobDetails />} />
-        <Route path="/market-place/job-details/:jobId/apply-job" element={<ApplyJob/>} />
+        <Route
+          path="/market-place/job-details/:jobId"
+          element={<JobDetails />}
+        />
+        <Route
+          path="/market-place/job-details/:jobId/apply-job"
+          element={<ApplyJob />}
+        />
+         <Route path="*" element={<HomePage />} />
       </Routes>
     </Router>
   );

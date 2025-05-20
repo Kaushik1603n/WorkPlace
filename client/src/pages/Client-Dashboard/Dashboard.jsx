@@ -16,7 +16,6 @@ export default function ClientDashboard() {
   return (
     <>
       <main className="flex-1 p-4">
-        {/* Welcome Card */}
         <div className="bg-white rounded-lg  border-green-100 mb-6 border border-color">
           <div className="flex">
             <div className="p-6 flex-1">
@@ -37,7 +36,6 @@ export default function ClientDashboard() {
           </div>
         </div>
 
-        {/* Active Projects Section */}
         <div className="bg-color-light rounded-lg border border-color p-6">
           <h3 className="text-lg font-medium text-gray-800 mb-4">
             Active Project

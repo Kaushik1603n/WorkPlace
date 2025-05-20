@@ -12,7 +12,6 @@ const FreelancerLayout = () => {
       <div className="flex flex-1 overflow-hidden">
         <FreelancerSidebar />
 
-        {/* Main content will be injected here */}
         <main className="flex-1 overflow-y-auto p-4">
           <Outlet />
         </main>

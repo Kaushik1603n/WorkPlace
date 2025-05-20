@@ -82,7 +82,6 @@ export default function ClientProfileEdit() {
     const { fullName, companyName, email, location, website, description } =
       profileData;
 
-    // Basic validation
     if (!fullName.trim()) {
       toast.error("Full Name is required.");
       return;
@@ -118,20 +117,6 @@ export default function ClientProfileEdit() {
       return;
     }
 
-    // if (
-    //   user.fullName !== fullName ||
-    //   client.companyName !== companyName ||
-    //   user.email !== email ||
-    //   client.location !== location ||
-    //   client.website !== website ||
-    //   client.description !== description ||
-    //   setImg
-    // ) {
-    //   toast.error("different");
-    // } else {
-    //   toast.info("No changes detected");
-    //   return;
-    // }
     const isChanged =
       user?.fullName !== fullName ||
       client?.companyName !== companyName ||
@@ -182,7 +167,6 @@ export default function ClientProfileEdit() {
         Edit Client Profile
       </h2>
 
-      {/* Profile Photo */}
       <div className="mb-6">
         <label className="block font-medium text-gray-700 mb-2">
           Profile Photo
@@ -218,7 +202,6 @@ export default function ClientProfileEdit() {
         </div>
       </div>
 
-      {/* Cover Photo */}
       <div className="mb-6">
         <label className="block font-medium text-gray-700 mb-2">
           Cover Photo
@@ -247,7 +230,6 @@ export default function ClientProfileEdit() {
         </button>
       </div>
 
-      {/* Form Fields */}
       <div className="space-y-5">
         <div>
           <label className="block font-medium text-gray-700 mb-1">

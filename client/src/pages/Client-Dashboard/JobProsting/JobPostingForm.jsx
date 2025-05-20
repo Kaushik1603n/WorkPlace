@@ -102,22 +102,21 @@ function JobPostingForm() {
       return;
     }
 
-     dispatch(createNewJob(formData))
-          .unwrap()
-          .then((project) => {
-            console.log(project);
-            toast.success("project created   successfully");
-          })
-          .catch((error) => {
-            console.log(error?.error);
-            toast.error(error?.error);
-          });
+    dispatch(createNewJob(formData))
+      .unwrap()
+      .then((project) => {
+        console.log(project);
+        toast.success("project created   successfully");
+      })
+      .catch((error) => {
+        console.log(error?.error);
+        toast.error(error?.error);
+      });
   };
 
   return (
     <div className="bg-white rounded-lg p-6 shadow-sm">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Left Column */}
         <div className="space-y-6">
           <div>
             <label className="block text-gray-700 font-medium mb-2">
@@ -203,7 +202,6 @@ function JobPostingForm() {
           </div>
         </div>
 
-        {/* Right Column */}
         <div className="space-y-6">
           <div>
             <label className="block text-gray-700 font-medium mb-2">
@@ -268,19 +266,7 @@ function JobPostingForm() {
               </div>
             </div>
           </div>
-          {/* <div>
-            <label className="block text-gray-700 font-medium mb-2">
-              Skill
-            </label>
-            <input
-              type="text"
-              name="skill"
-              value={formData.skill}
-              onChange={handleChange}
-              placeholder="Enter Skill"
-              className="w-full px-4 py-2 border border-[#27AE60] rounded-md focus:outline-none "
-            />
-          </div> */}
+
           <JobSkills onSkillsChange={handleSkillsChange} />
           <div>
             <label className="block text-gray-700 font-medium mb-2">
@@ -361,14 +347,6 @@ function JobPostingForm() {
               </div>
             </div>
           </div>
-
-          {/* <div>
-            <label className="block text-gray-700 font-medium mb-2">Attachments</label>
-            <div className="border border-[#27AE60] rounded-md p-4 text-center cursor-pointer hover:bg-gray-50">
-              <p className="text-gray-500">Upload Your Job Attachments</p>
-              <input type="file" className="hidden"  />
-            </div>
-          </div> */}
 
           <div className="pt-4">
             <button

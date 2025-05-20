@@ -3,7 +3,7 @@ import { Search, Filter, Clock, CheckCircle, AlertCircle, DollarSign } from "luc
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 // import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 function AllProposals() {
   const [proposals, setProposals] = useState([]);
@@ -16,7 +16,6 @@ function AllProposals() {
     axios(`${baseURL}/jobs/all-proposal/${jobId}`, {
       withCredentials: true,
     }).then((res) => {
-      toast.success("success");
       setProposals(res.data?.allProposal);
     });
   }, [baseURL]);
