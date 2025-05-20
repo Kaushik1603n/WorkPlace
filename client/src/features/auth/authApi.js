@@ -6,6 +6,7 @@ export const authApi = {
   verifyEmail: (token) => axiosClient.post('/auth/verify-otp', token),
   forgotPassword: (email) => axiosClient.post('/auth/forgot-password', email ),
   resetOtp: (otp) => axiosClient.post('/auth/verify-reset-otp',  otp ),
+  reSentOtp: (userId) => axiosClient.post('/auth/resend-otp', userId  ),
   resetPassword: (data) => axiosClient.post('/auth/reset-password', data),
   logout: () => axiosClient.post('/auth/logout'),
   getMe: () => axiosClient.get('/auth/me'),

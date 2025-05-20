@@ -164,6 +164,7 @@ export const resendOtp = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "New OTP sent to your email",
+      userId:userId
     });
   } catch (err) {
     res.status(500).json({ success: false, message: "Internal server error" });
@@ -193,7 +194,6 @@ export const forgotPass = async (req, res) => {
 
     existingUser.otp = otp;
     existingUser.otpExpiry = otpExpiry;
-
     await existingUser.save();
 
     await sendPasswordResetOtpEmail(email, existingUser.fullName, otp);
@@ -214,6 +214,9 @@ export const forgotPass = async (req, res) => {
 
 export const resetPassVerifyOtp = async (req, res) => {
   const { userId, otp } = req.body;
+
+  console.log(userId, otp );
+  
 
   try {
     if (!userId || !otp) {

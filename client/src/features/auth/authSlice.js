@@ -63,6 +63,20 @@ export const resetOtp = createAsyncThunk(
     }
   }
 );
+
+/////
+export const resendOtp = createAsyncThunk(
+  "auth/resend-otp",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await authApi.reSentOtp(userId);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const resetPassword = createAsyncThunk(
   "auth/reset-pass",
   async (pass, { rejectWithValue }) => {
@@ -88,10 +102,10 @@ export const fetchUser = createAsyncThunk(
 );
 
 export const googleAuth = createAsyncThunk(
-  'auth/google',
+  "auth/google",
   async (accessToken, { rejectWithValue }) => {
     try {
-      const response = await axios.post('/api/auth/google', { accessToken });
+      const response = await axios.post("/api/auth/google", { accessToken });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -194,6 +208,23 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+
+      // resent otp
+      .addCase(resendOtp.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(resendOtp.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = false;
+        state.user = action.payload.userId;
+      })
+      .addCase(resendOtp.rejected, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = false;
+        state.error = action.payload;
+      })
+
       //change pass
       .addCase(resetPassword.pending, (state) => {
         state.loading = true;
@@ -232,12 +263,12 @@ const authSlice = createSlice({
       .addCase(googleAuth.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
-        localStorage.setItem('accessToken', action.payload.accessToken);
-        localStorage.setItem('refreshToken', action.payload.refreshToken);
+        localStorage.setItem("accessToken", action.payload.accessToken);
+        localStorage.setItem("refreshToken", action.payload.refreshToken);
       })
       .addCase(googleAuth.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Google authentication failed';
+        state.error = action.payload?.message || "Google authentication failed";
       })
 
       // Logout

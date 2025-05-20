@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { resetOtp } from "../../features/auth/authSlice";
+import { resendOtp, resetOtp } from "../../features/auth/authSlice";
 import { toast } from "react-toastify";
 import p2 from "../../assets/pp1.svg";
 
@@ -18,7 +18,6 @@ export default function ResetOtp() {
   const { user } = useSelector((state) => state.auth);
   console.log(user);
 
-
   useEffect(() => {
     let interval;
     if (isTimerRunning && timer > 0) {
@@ -27,8 +26,8 @@ export default function ResetOtp() {
       }, 1000);
     } else if (timer === 0) {
       setIsTimerRunning(false);
-      setIsResendDisabled(false); 
-      setIsRegisterDisabled(true); 
+      setIsResendDisabled(false);
+      setIsRegisterDisabled(true);
     }
     return () => clearInterval(interval);
   }, [timer, isTimerRunning]);
@@ -66,13 +65,18 @@ export default function ResetOtp() {
     if (isResendDisabled) return;
 
     setOtp(["", "", "", ""]);
+    dispatch(resendOtp({  userId: user }))
+      .unwrap()
+      .then(() => {
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
     setTimer(60);
     setIsTimerRunning(true);
     setIsResendDisabled(true);
-    setIsRegisterDisabled(false); 
+    setIsRegisterDisabled(false);
     inputRefs[0].current.focus();
-
-    console.log("Resending OTP...");
   };
 
   const handleRegister = () => {
@@ -83,7 +87,7 @@ export default function ResetOtp() {
     dispatch(resetOtp({ otp: otpCode, userId: user }))
       .unwrap()
       .then(() => {
-        navigate("/change-pass"); 
+        navigate("/change-pass");
       })
       .catch((error) => {
         toast.error(error.message);

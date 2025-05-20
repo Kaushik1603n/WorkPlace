@@ -28,6 +28,7 @@ router.post("/refresh", refresh);
 
 router.post("/forgot-password", forgotPass);
 router.post("/verify-reset-otp", resetPassVerifyOtp);
+router.get("/resend-otp", resendOtp);
 router.post("/reset-password", changePassword);
 
 // Protected routes

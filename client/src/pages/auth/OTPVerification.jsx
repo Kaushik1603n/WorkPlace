@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { verifyEmail } from "../../features/auth/authSlice";
+import { resendOtp, verifyEmail } from "../../features/auth/authSlice";
 import { toast } from "react-toastify";
 import p2 from "../../assets/pp1.svg";
 
@@ -25,8 +25,8 @@ export default function OTPVerification() {
       }, 1000);
     } else if (timer === 0) {
       setIsTimerRunning(false);
-      setIsResendDisabled(false); 
-      setIsRegisterDisabled(true); 
+      setIsResendDisabled(false);
+      setIsRegisterDisabled(true);
     }
     return () => clearInterval(interval);
   }, [timer, isTimerRunning]);
@@ -64,10 +64,16 @@ export default function OTPVerification() {
     if (isResendDisabled) return;
 
     setOtp(["", "", "", ""]);
+    dispatch(resendOtp({ userId: user }))
+      .unwrap()
+      .then(() => {})
+      .catch((error) => {
+        toast.error(error.message);
+      });
     setTimer(60);
     setIsTimerRunning(true);
-    setIsResendDisabled(true); 
-    setIsRegisterDisabled(false); 
+    setIsResendDisabled(true);
+    setIsRegisterDisabled(false);
     inputRefs[0].current.focus();
 
     console.log("Resending OTP...");
@@ -81,7 +87,7 @@ export default function OTPVerification() {
     dispatch(verifyEmail({ otp: otpCode, userId: user }))
       .unwrap()
       .then(() => {
-        navigate("/change-pass"); 
+        navigate("/change-pass");
       })
       .catch((error) => {
         toast.error(error.message);
