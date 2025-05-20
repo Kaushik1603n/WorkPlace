@@ -50,13 +50,7 @@ function ApplyJob() {
       [name]: type === "checkbox" ? checked : value,
     });
 
-    // // Clear error when field is edited
-    // if (errors[name]) {
-    //   setErrors({
-    //     ...errors,
-    //     [name]: "",
-    //   });
-    // }
+
   };
 
   const handleMilestoneChange = (e) => {
@@ -220,7 +214,7 @@ function ApplyJob() {
             Complete the form below to send your proposal to the client.
           </p>
         </div>
-        {/* Banner and Profile Image */}
+
         <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8 border border-color">
           <div className="relative p-4">
             <div className="w-full aspect-[5.5/1] overflow-hidden ">
@@ -231,7 +225,6 @@ function ApplyJob() {
               />
             </div>
 
-            {/* Profile Image on Banner */}
             <div className="absolute left-4 bottom-0 transform translate-y-1/2">
               <div className="h-30 w-30 rounded-full bg-white p-1 shadow-md">
                 <img
@@ -245,7 +238,6 @@ function ApplyJob() {
 
           <div className="pt-16 pb-4 px-4">
             <div className="flex flex-col md:flex-row gap-8">
-              {/* Profile Info Section */}
               <div className="w-full md:w-1/3">
                 <h2 className="text-xl font-semibold text-gray-800">
                   {user?.fullName}
@@ -318,7 +310,6 @@ function ApplyJob() {
                 </div>
               </div>
 
-              {/* Projects Stats and Recent Projects Section */}
               <div className="w-full md:w-2/3">
                 <div className="mt-6 border border-color rounded-md p-4 w-full">
                   <h3 className="text-lg font-semibold mb-3">Skills</h3>

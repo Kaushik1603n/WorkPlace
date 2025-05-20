@@ -53,7 +53,6 @@ function JobDetails() {
             </div>
           </div>
 
-          {/* Right Column */}
           <div>
             <div className="mb-8">
               <h2 className="text-lg font-semibold mb-2">
